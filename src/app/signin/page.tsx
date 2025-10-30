@@ -2,10 +2,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UserPlus, LogIn, Stethoscope } from 'lucide-react';
 import { useEffect } from 'react';
+import LanguageSelector from '@/components/shared/LanguageSelector';
 
 export default function WelcomeAuthPage() {
   const router = useRouter();
@@ -39,6 +40,12 @@ export default function WelcomeAuthPage() {
                 Doctor
             </Button>
         </CardContent>
+        <CardFooter className="flex-col gap-4">
+            <LanguageSelector />
+            <p className="text-xs text-muted-foreground pt-2">
+                Select your preferred language to personalize your experience.
+            </p>
+        </CardFooter>
       </Card>
     </div>
   );
