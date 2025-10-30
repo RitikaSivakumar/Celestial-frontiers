@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -36,6 +36,13 @@ export default function SignInPage() {
   const [user, setUser] = useState<{ name: string; dob: Date } | null>(null);
   const [showBirthday, setShowBirthday] = useState(false);
 
+  useEffect(() => {
+    // If user is already logged in, redirect to roles page
+    if (localStorage.getItem('user_session')) {
+      router.replace('/roles');
+    }
+  }, [router]);
+
   const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
@@ -55,6 +62,9 @@ export default function SignInPage() {
     const today = new Date();
     const age = parseInt(data.age, 10);
     
+    // Simulate storing session
+    localStorage.setItem('user_session', JSON.stringify({ name: data.name, email: data.email, age, dob: data.dob, language: data.language }));
+
     const zodiacSign = getZodiacSign(dob);
     const astrologicalMessage = getAstrologicalMessage(zodiacSign, data.name);
 
@@ -94,8 +104,8 @@ export default function SignInPage() {
   
   const handleCelebrationEnd = () => {
       setShowBirthday(false);
-      const ageString = (document.getElementById('age') as HTMLInputElement)?.value;
-      const age = ageString ? parseInt(ageString, 10) : 0;
+      const sessionData = localStorage.getItem('user_session');
+      const age = sessionData ? JSON.parse(sessionData).age : 0;
       
       const dashboard = getDashboardForAge(age);
       toast({

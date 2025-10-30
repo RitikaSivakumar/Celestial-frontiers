@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -44,7 +45,7 @@ export default function BirthdayCelebration({ name, onCelebrationEnd }: Birthday
             <div className="space-y-4 animate-in fade-in-0 slide-in-from-bottom-5">
               <div className="text-6xl">🍰</div>
               <p className="text-lg font-semibold">May your day be filled with light, love, and laughter!</p>
-              <p className="text-muted-foreground">Redirecting you to your dashboard...</p>
+              <p className="text-muted-foreground">Redirecting you to your personalized dashboard...</p>
             </div>
           )}
         </CardContent>

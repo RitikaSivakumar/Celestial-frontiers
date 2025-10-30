@@ -1,7 +1,7 @@
 
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   SidebarHeader,
   SidebarContent,
@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import {
   LayoutDashboard,
@@ -22,6 +23,7 @@ import {
   FileText,
   Wind,
   Gamepad2,
+  LogOut,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
@@ -40,8 +42,14 @@ const menuItems = [
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isDashboard = pathname.startsWith('/dashboard');
+
+  const handleLogout = () => {
+    localStorage.removeItem('user_session');
+    router.push('/signin');
+  };
 
   return (
     <>
@@ -54,9 +62,9 @@ export function SidebarNav() {
       <SidebarContent>
         <SidebarMenu>
             <SidebarMenuItem>
-                <Link href="/">
+                <Link href="/roles">
                     <SidebarMenuButton
-                    isActive={pathname === '/'}
+                    isActive={pathname === '/roles'}
                     tooltip="Home"
                     >
                     <Home />
@@ -97,6 +105,15 @@ export function SidebarNav() {
             <span>AI Companion</span>
           </SidebarMenuButton>
         </ChatbotTrigger>
+        <SidebarSeparator />
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
+                    <LogOut />
+                    <span>Logout</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </>
   );
