@@ -37,9 +37,20 @@ export default function SignInPage() {
     resolver: zodResolver(formSchema),
   });
 
+  const getDashboardForAge = (age: number): { path: string; name: string } => {
+    if (age <= 24) {
+      return { path: '/dashboard/student', name: 'Student' };
+    } else if (age <= 60) {
+      return { path: '/dashboard/employee', name: 'Employee' };
+    } else {
+      return { path: '/dashboard/senior', name: 'Senior Citizen' };
+    }
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const dob = new Date(data.dob);
     const today = new Date();
+    const age = parseInt(data.age, 10);
     
     const zodiacSign = getZodiacSign(dob);
     const astrologicalMessage = getAstrologicalMessage(zodiacSign, data.name);
@@ -52,20 +63,42 @@ export default function SignInPage() {
     
     setUser({ name: data.name, dob: dob });
 
+    const handleRedirect = () => {
+        const dashboard = getDashboardForAge(age);
+        toast({
+            title: "Personalizing Your Experience",
+            description: `Based on your age, we've prepared the ${dashboard.name} dashboard for you.`,
+            duration: 4000,
+        });
+
+        setTimeout(() => {
+            router.push(dashboard.path);
+        }, 2000);
+    }
+
     // Check for birthday
     if (dob.getDate() === today.getDate() && dob.getMonth() === today.getMonth()) {
       setShowBirthday(true);
     } else {
-      // Redirect to role selection after a short delay
-      setTimeout(() => {
-        router.push('/roles');
-      }, 2000);
+      handleRedirect();
     }
   };
   
   const handleCelebrationEnd = () => {
       setShowBirthday(false);
-      router.push('/roles');
+      const ageString = (document.getElementById('age') as HTMLInputElement)?.value;
+      const age = ageString ? parseInt(ageString, 10) : 0;
+      
+      const dashboard = getDashboardForAge(age);
+      toast({
+          title: "Personalizing Your Experience",
+          description: `Based on your age, we've prepared the ${dashboard.name} dashboard for you.`,
+          duration: 4000,
+      });
+
+      setTimeout(() => {
+          router.push(dashboard.path);
+      }, 2000);
   }
 
   if (showBirthday && user) {
