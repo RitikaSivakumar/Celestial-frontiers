@@ -83,7 +83,7 @@ export default function AssessmentResults({ phq9Answers, gad7Answers, onRetake }
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link href="/doctors" className="flex-1">
-                                    <Button className="w-full" variant="destructive">Connect with a Doctor</Button>
+                                    <Button className="w-full">Connect with a Doctor</Button>
                                 </Link>
                                 <Button className="w-full flex-1" variant="outline">Call a Helpline</Button>
                             </div>
