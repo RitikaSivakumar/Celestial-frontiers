@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 
 export default function SoothingSongs() {
     const [selectedTrack, setSelectedTrack] = useState<Track>(musicTracks[0]);
