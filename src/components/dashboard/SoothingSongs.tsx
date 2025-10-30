@@ -25,6 +25,13 @@ export default function SoothingSongs() {
         if (storedVolume) {
             setVolume(Number(storedVolume));
         }
+        const storedTrackId = localStorage.getItem('music-track-id');
+        if (storedTrackId) {
+            const track = musicTracks.find(t => t.id === parseInt(storedTrackId));
+            if (track) {
+                setSelectedTrack(track);
+            }
+        }
     }, []);
 
     useEffect(() => {
@@ -36,27 +43,20 @@ export default function SoothingSongs() {
     
     useEffect(() => {
         if (audioRef.current) {
-            audioRef.current.src = selectedTrack.url;
+            if(audioRef.current.src !== selectedTrack.url) {
+                audioRef.current.src = selectedTrack.url;
+            }
             if(isPlaying) {
                 audioRef.current.play().catch(e => console.error("Playback failed", e));
+            } else {
+                audioRef.current.pause();
             }
         }
+        localStorage.setItem('music-track-id', String(selectedTrack.id));
     }, [selectedTrack, isPlaying]);
 
     const togglePlay = () => {
         if (audioRef.current) {
-            if (isPlaying) {
-                audioRef.current.pause();
-            } else {
-                audioRef.current.play().catch(e => {
-                    console.error("Playback failed", e)
-                    toast({
-                        variant: 'destructive',
-                        title: "Playback Error",
-                        description: "Could not play the audio track."
-                    });
-                });
-            }
             setIsPlaying(!isPlaying);
         }
     };
@@ -65,7 +65,6 @@ export default function SoothingSongs() {
         const track = musicTracks.find(t => t.id === parseInt(trackId));
         if (track) {
             setSelectedTrack(track);
-            // Quick preview
             if (!isPlaying) {
                 setIsPlaying(true);
             }
@@ -92,7 +91,7 @@ export default function SoothingSongs() {
                  </Button>
              </div>
              <div className="mt-4 space-y-3">
-                 <Select onValueChange={handleTrackChange} defaultValue={String(selectedTrack.id)}>
+                 <Select onValueChange={handleTrackChange} defaultValue={String(selectedTrack.id)} value={String(selectedTrack.id)}>
                      <SelectTrigger className="w-full">
                          <SelectValue placeholder="Select a track" />
                      </SelectTrigger>
