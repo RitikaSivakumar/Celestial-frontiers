@@ -1,0 +1,424 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Stores user profile information, including preferred language for i18n support.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile. (Primary Key)"
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "preferredLanguage": {
+          "type": "string",
+          "description": "User's preferred language code (e.g., 'en', 'ta', 'hi')."
+        },
+        "birthDate": {
+          "type": "string",
+          "description": "User's birthdate, used for astrological insights.",
+          "format": "date-time"
+        },
+        "caregiverIds": {
+          "type": "array",
+          "description": "References to Caregivers. (Relationship: UserProfile 1:N Caregiver)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "preferredLanguage"
+      ]
+    },
+    "MoodLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MoodLog",
+      "type": "object",
+      "description": "Stores daily mood logs for users, including mood and diary entries.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the mood log entry. (Primary Key)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N MoodLog)"
+        },
+        "mood": {
+          "type": "string",
+          "description": "User's mood for the day (e.g., happy, neutral, sad)."
+        },
+        "diaryEntry": {
+          "type": "string",
+          "description": "Optional diary entry (text or voice note)."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the mood was logged.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "mood",
+        "timestamp"
+      ]
+    },
+    "AssessmentResult": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AssessmentResult",
+      "type": "object",
+      "description": "Stores results from mental health assessments (PHQ-9, GAD-7).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the assessment result. (Primary Key)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N AssessmentResult)"
+        },
+        "assessmentType": {
+          "type": "string",
+          "description": "Type of assessment (e.g., PHQ-9, GAD-7)."
+        },
+        "score": {
+          "type": "number",
+          "description": "Assessment score."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the assessment was taken.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "assessmentType",
+        "score",
+        "timestamp"
+      ]
+    },
+    "MedicationReminder": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MedicationReminder",
+      "type": "object",
+      "description": "Stores medication reminders and associated details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the medication reminder. (Primary Key)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N MedicationReminder)"
+        },
+        "medicationName": {
+          "type": "string",
+          "description": "Name of the medication."
+        },
+        "scheduledTime": {
+          "type": "string",
+          "description": "Scheduled time for the reminder.",
+          "format": "date-time"
+        },
+        "dosage": {
+          "type": "string",
+          "description": "Dosage of the medication."
+        },
+        "isTaken": {
+          "type": "boolean",
+          "description": "Indicates if the medication was taken."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "medicationName",
+        "scheduledTime",
+        "dosage",
+        "isTaken"
+      ]
+    },
+    "Doctor": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Doctor",
+      "type": "object",
+      "description": "Stores information about verified doctors.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the doctor. (Primary Key)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Doctor's name."
+        },
+        "specialty": {
+          "type": "string",
+          "description": "Doctor's specialty."
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Doctor's contact information."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "specialty",
+        "contactInfo"
+      ]
+    },
+    "Routine": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Routine",
+      "type": "object",
+      "description": "Stores information about the 7-day mind-peace plan.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the routine. (Primary Key)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N Routine)"
+        },
+        "day": {
+          "type": "number",
+          "description": "The day of the routine (1-7)."
+        },
+        "focus": {
+          "type": "string",
+          "description": "The focus of the day (e.g., breathing, movement)."
+        },
+        "completed": {
+          "type": "boolean",
+          "description": "Indicates if the routine was completed for the day."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "day",
+        "focus",
+        "completed"
+      ]
+    },
+    "Caregiver": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Caregiver",
+      "type": "object",
+      "description": "Stores information about caregivers or family members linked to a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the caregiver. (Primary Key)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Caregiver's name."
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Caregiver's contact information (e.g., phone number, email)."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "contactInfo"
+      ]
+    },
+    "MultilingualContent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MultilingualContent",
+      "type": "object",
+      "description": "Stores content with translations for multiple languages.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the multilingual content. (Primary Key)"
+        },
+        "contentKey": {
+          "type": "string",
+          "description": "Key to identify the content (e.g., 'welcome_message', 'daily_tip')."
+        },
+        "translations": {
+          "type": "string",
+          "description": "JSON object containing translations for different languages (e.g., {'en': 'Welcome', 'ta': 'வரவேற்பு'})."
+        }
+      },
+      "required": [
+        "id",
+        "contentKey",
+        "translations"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information, including preferred language. Used for path-based ownership. Includes the denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/mood_logs/{moodLogId}",
+        "definition": {
+          "entityName": "MoodLog",
+          "schema": {
+            "$ref": "#/backend/entities/MoodLog"
+          },
+          "description": "Stores mood logs for a specific user.  Uses path-based ownership: only the user can read/write their own mood logs. Includes the denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "moodLogId",
+              "description": "The unique identifier for the mood log entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/assessment_results/{assessmentResultId}",
+        "definition": {
+          "entityName": "AssessmentResult",
+          "schema": {
+            "$ref": "#/backend/entities/AssessmentResult"
+          },
+          "description": "Stores assessment results for a specific user. Uses path-based ownership. Includes the denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "assessmentResultId",
+              "description": "The unique identifier for the assessment result."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/medication_reminders/{medicationReminderId}",
+        "definition": {
+          "entityName": "MedicationReminder",
+          "schema": {
+            "$ref": "#/backend/entities/MedicationReminder"
+          },
+          "description": "Stores medication reminders for a specific user. Uses path-based ownership. Includes the denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "medicationReminderId",
+              "description": "The unique identifier for the medication reminder."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/routines/{routineId}",
+        "definition": {
+          "entityName": "Routine",
+          "schema": {
+            "$ref": "#/backend/entities/Routine"
+          },
+          "description": "Stores routine information for a specific user. Uses path-based ownership. Includes the denormalized 'userId' for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "routineId",
+              "description": "The unique identifier for the routine."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/doctors/{doctorId}",
+        "definition": {
+          "entityName": "Doctor",
+          "schema": {
+            "$ref": "#/backend/entities/Doctor"
+          },
+          "description": "Stores information about verified doctors.  No specific ownership, accessible based on application logic.",
+          "params": [
+            {
+              "name": "doctorId",
+              "description": "The unique identifier for the doctor."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/caregivers/{caregiverId}",
+        "definition": {
+          "entityName": "Caregiver",
+          "schema": {
+            "$ref": "#/backend/entities/Caregiver"
+          },
+          "description": "Stores information about caregivers. No specific ownership, accessible based on application logic.",
+          "params": [
+            {
+              "name": "caregiverId",
+              "description": "The unique identifier for the caregiver."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/multilingual_content/{contentId}",
+        "definition": {
+          "entityName": "MultilingualContent",
+          "schema": {
+            "$ref": "#/backend/entities/MultilingualContent"
+          },
+          "description": "Stores multilingual content accessible to all users.  Write access restricted to admins (global role handled in rules).",
+          "params": [
+            {
+              "name": "contentId",
+              "description": "The unique identifier for the multilingual content."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure prioritizes authorization independence and supports the required multilingual functionality. It uses path-based ownership for user-specific data and a dedicated collection for global multilingual content. This segregation ensures simpler, more secure rules and efficient data retrieval. This addresses the user's request for i18n support and aligns with the prompt's requirements for authorization independence, clear security rules, and the avoidance of custom claims. It allows easy querying, robust rules, and scalable solution for managing i18n content. \n\nThe data structure provides Authorization Independence by:\n1.  Placing user profiles under `/users/{userId}`. This enables rules to simply check if `request.auth.uid == userId`.\n2.  Storing `MoodLog`, `AssessmentResult`, `MedicationReminder`, and `Routine` documents under `/users/{userId}` collections, which allows rules to rely solely on the path structure for ownership and access control, avoiding the need for `get()` calls and allowing atomic operations.\n3.  Placing global multilingual content under `/multilingual_content/{contentId}` allows any authenticated user to access the data, but only admins can write to the content."
+  }
+}
