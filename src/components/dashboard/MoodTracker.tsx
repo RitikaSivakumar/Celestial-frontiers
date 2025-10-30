@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -29,13 +30,13 @@ export default function MoodTracker() {
     
     setIsLoading(true);
 
-    let analysisToast: { title: string, description: React.ReactNode, variant: 'default' } | null = null;
+    let analysisToast: { title: string, description: React.ReactNode, variant: 'default', duration: number } | null = null;
     if(diaryEntry.trim().length > 10){ // only run analysis for longer entries
         try {
             const result = await analyzeDiaryEntry({ diaryEntry });
             if (result) {
                 analysisToast = {
-                    title: "AI Insight",
+                    title: "A Thought for You",
                     description: (
                         <div>
                             <p>I noticed your emotional state seems to be: <span className="font-semibold">{result.emotionalState}</span>.</p>
@@ -43,6 +44,7 @@ export default function MoodTracker() {
                         </div>
                     ),
                     variant: 'default',
+                    duration: 9000,
                 }
             }
         } catch(e) {
