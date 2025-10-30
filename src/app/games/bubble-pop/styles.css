@@ -1,0 +1,57 @@
+
+@keyframes float-up {
+  from {
+    bottom: -150px;
+    transform: translateX(0);
+  }
+  to {
+    bottom: 100vh;
+    transform: translateX(calc(sin(var(--i, 0) / 20) * 40px));
+  }
+}
+
+@keyframes pop-animation {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.bubble {
+  border-radius: 50%;
+  background: radial-gradient(circle at 65% 15%, white 1px, rgba(255, 255, 255, 0.8) 10%, rgba(200, 220, 255, 0.4) 60%, rgba(255, 255, 255, 0) 100%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--foreground) / 0.7);
+  font-family: var(--font-headline);
+  font-weight: bold;
+  transition: transform 0.1s ease-out;
+}
+
+.bubble:hover {
+  transform: scale(1.1);
+}
+
+.bubble.pop {
+  animation: pop-animation 0.3s ease-out forwards;
+  background: transparent;
+}
+
+.bubble-word {
+  opacity: 0;
+  animation: fade-in-word 1s forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes fade-in-word {
+    to {
+        opacity: 1;
+    }
+}
+
