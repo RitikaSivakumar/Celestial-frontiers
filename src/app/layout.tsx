@@ -5,7 +5,7 @@ import './globals.css';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { SidebarNav } from '@/components/shared/SidebarNav';
 import { Toaster } from '@/components/ui/toaster';
-import { Chatbot, useChatbot } from '@/components/shared/Chatbot';
+import { Chatbot, ChatbotProvider, useChatbot } from '@/components/shared/Chatbot';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -38,6 +38,24 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [isClient, openChatbot]);
 
+  const mainContent = (
+    <>
+      {showSidebar ? (
+        <SidebarProvider>
+          <Sidebar>
+            <SidebarNav />
+          </Sidebar>
+          <SidebarInset>
+            {children}
+          </SidebarInset>
+        </SidebarProvider>
+      ) : (
+        children
+      )}
+      <Toaster />
+    </>
+  );
+
   if (isClient && !showSidebar) {
     return (
       <>
@@ -56,17 +74,16 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
       <SidebarProvider>
         <Sidebar>
           <SidebarNav />
         </Sidebar>
         <SidebarInset>
-          <Chatbot>{children}</Chatbot>
+            <Chatbot>
+             {children}
+            </Chatbot>
         </SidebarInset>
       </SidebarProvider>
-      <Toaster />
-    </>
   );
 }
 
@@ -85,7 +102,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-         <AppLayout>{children}</AppLayout>
+         <ChatbotProvider>
+            <AppLayout>{children}</AppLayout>
+            <Toaster />
+         </ChatbotProvider>
       </body>
     </html>
   );

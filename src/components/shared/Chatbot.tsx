@@ -39,6 +39,15 @@ type ChatbotContextType = {
 
 const ChatbotContext = createContext<ChatbotContextType | undefined>(undefined);
 
+export function ChatbotProvider({ children }: { children: React.ReactNode }) {
+  const [isOpen, setOpen] = useState(false);
+  return (
+    <ChatbotContext.Provider value={{ isOpen, setOpen }}>
+      {children}
+    </ChatbotContext.Provider>
+  );
+}
+
 export function useChatbot() {
   const context = useContext(ChatbotContext);
   if (!context) {
@@ -48,7 +57,7 @@ export function useChatbot() {
 }
 
 export function Chatbot({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const {isOpen, setOpen} = useChatbot();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -120,8 +129,8 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ChatbotContext.Provider value={{ isOpen, setOpen: setIsOpen }}>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+    <>
+      <Sheet open={isOpen} onOpenChange={setOpen}>
         {children}
         <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
           <SheetHeader className="p-6 pb-4">
@@ -201,7 +210,7 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
           </div>
         </SheetContent>
       </Sheet>
-    </ChatbotContext.Provider>
+    </>
   );
 }
 
