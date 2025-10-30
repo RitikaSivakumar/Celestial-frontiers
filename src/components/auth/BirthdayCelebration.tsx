@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -14,7 +13,6 @@ export default function BirthdayCelebration({ name, onCelebrationEnd }: Birthday
   const [cakeCut, setCakeCut] = useState(false);
 
   useEffect(() => {
-    // Automatically proceed if cake is not cut after some time
     if(cakeCut){
         const timer = setTimeout(() => {
             onCelebrationEnd();
