@@ -1,25 +1,88 @@
-import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
-import MoodTracker from "@/components/dashboard/MoodTracker";
-import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
-import MedicationReminders from "@/components/dashboard/MedicationReminders";
-import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
+import { Phone, Heart, BookOpen, FileText } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function SeniorDashboard() {
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 p-4 md:p-8 space-y-8">
-        <WelcomeHeader />
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2">
-          <div className="flex flex-col gap-8">
-            <MoodTracker />
-            <MedicationReminders />
+    <div className="flex flex-col min-h-screen p-4 md:p-8 space-y-8">
+      <header className="text-center space-y-4">
+        <h1 className="text-4xl md:text-5xl font-headline text-foreground">
+          Hello there 👋, I’m happy to see you today.
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Remember to take a moment for yourself. You are not alone.
+        </p>
+      </header>
+
+      <Card className="bg-primary/10 border-primary">
+        <CardHeader>
+          <CardTitle className="font-headline text-center">A Moment of Calm</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center">
+          <p className="text-lg mb-4">Let's take a deep breath together.</p>
+          <div className="flex justify-center items-center gap-4 text-lg font-semibold text-primary">
+            <span>Inhale</span>
+            <span className="text-2xl">•</span>
+            <span>Hold</span>
+            <span className="text-2xl">•</span>
+            <span>Exhale</span>
           </div>
-          <div className="flex flex-col gap-8">
-            <RoutineBuilder />
-            <WeeklyReportSummary />
-          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline"><BookOpen/> Start Reflection</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground mb-4">Share your thoughts or feelings in your private journal.</p>
+                <Link href="/diary" passHref>
+                    <Button className="w-full">Open Journal</Button>
+                </Link>
+            </CardContent>
+          </Card>
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline"><Heart/> Talk to Someone</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <p className="text-muted-foreground mb-4">Connect with family, a caregiver, or a support line.</p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <Button variant="outline" className="flex-1">Call Family</Button>
+                    <Button variant="outline" className="flex-1">Message Caregiver</Button>
+                </div>
+            </CardContent>
+          </Card>
+      </div>
+      
+      <div>
+        <h2 className="text-2xl font-headline mb-4 text-center">Assessments & Support</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 font-headline"><FileText/> PHQ-9 & GAD-7</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-4">Check in on your emotional well-being with a simple questionnaire.</p>
+                    <Button variant="secondary" className="w-full">Start Assessment</Button>
+                </CardContent>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2 font-headline"><Phone/> Emergency & Support</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground mb-4">Quick access to help when you need it most.</p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button variant="destructive" className="flex-1">Call Doctor</Button>
+                      <Button variant="destructive" className="flex-1">Helpline</Button>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
