@@ -13,13 +13,20 @@ import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { Stethoscope } from 'lucide-react';
 import Link from 'next/link';
+import { doctors } from '@/lib/mock-data'; // Using this to get doctor IDs
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
+
+const doctorCredentials = [
+    { email: 'doc1@example.com', password: '1234', id: 1 },
+    { email: 'doc2@example.com', password: '567', id: 2 },
+    { email: 'doc3@example.com', password: '8910', id: 3 },
+];
 
 export default function DoctorLoginPage() {
   const router = useRouter();
@@ -32,18 +39,26 @@ export default function DoctorLoginPage() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsSubmitting(true);
-    // Simulate API call for authentication
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // In a real app, you would validate credentials here.
-    // For this prototype, we'll simulate a successful login.
-    toast({
-      title: 'Login Successful',
-      description: 'Redirecting to your dashboard...',
-    });
-    
-    router.push('/doctors/selection');
-    setIsSubmitting(false);
+
+    const foundDoctor = doctorCredentials.find(
+      (cred) => cred.email === data.email && cred.password === data.password
+    );
+
+    if (foundDoctor) {
+      toast({
+        title: 'Login Successful',
+        description: 'Redirecting to your dashboard...',
+      });
+      router.push(`/doctors/${foundDoctor.id}`);
+    } else {
+      toast({
+        title: 'Login Failed',
+        description: 'Invalid login credentials.',
+        variant: 'destructive',
+      });
+      setIsSubmitting(false);
+    }
   };
 
   return (
