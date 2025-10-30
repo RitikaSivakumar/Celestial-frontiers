@@ -17,6 +17,9 @@ import { LogIn } from 'lucide-react';
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
+  age: z.string().refine((val) => !isNaN(parseInt(val, 10)) && parseInt(val, 10) > 0, {
+    message: 'Please enter a valid age',
+  }),
   dob: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: 'Please enter a valid date',
   }),
@@ -87,6 +90,11 @@ export default function SignInPage() {
               <Label htmlFor="email">Email / Main ID</Label>
               <Input id="email" type="email" {...register('email')} />
               {errors.email && <p className="text-destructive text-sm">{errors.email.message}</p>}
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="age">Age</Label>
+              <Input id="age" type="number" {...register('age')} />
+              {errors.age && <p className="text-destructive text-sm">{errors.age.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="dob">Date of Birth</Label>
