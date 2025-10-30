@@ -20,8 +20,8 @@ export default function RoleSelectionPage() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {roles.map(role => (
-          <Link href={role.href} key={role.name} passHref>
-            <Card className="w-64 h-64 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border-primary transition-all duration-200 cursor-pointer">
+          <Link href={role.href} key={role.name} passHref className="block">
+            <Card className="w-64 h-64 flex flex-col items-center justify-center text-center hover:shadow-lg hover:border-primary transition-all duration-200 cursor-pointer h-full">
               <CardHeader>
                 <div className="mx-auto bg-primary/10 p-4 rounded-full text-primary">
                   {role.icon}
