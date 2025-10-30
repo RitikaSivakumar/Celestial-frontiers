@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -11,8 +12,6 @@ import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -23,7 +22,6 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const auth = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,22 +31,25 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsSubmitting(true);
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
+    // Mock authentication
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In a real app, you'd call Firebase/backend here
+    if (data.email === "user@example.com" && data.password === "password") {
+      localStorage.setItem('user_loggedin', 'true');
       toast({
         title: 'Login Successful',
         description: 'Welcome back!',
       });
       router.push('/roles');
-    } catch (error: any) {
+    } else {
       toast({
         title: 'Login Failed',
-        description: error.message || 'Invalid email or password.',
+        description: 'Invalid email or password.',
         variant: 'destructive',
       });
-    } finally {
-        setIsSubmitting(false);
     }
+    setIsSubmitting(false);
   };
 
   return (

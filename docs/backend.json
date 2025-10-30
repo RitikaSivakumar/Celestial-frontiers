@@ -219,12 +219,6 @@
     ]
   },
   "firestore": {
-    "/users/{userId}": {
-      "schema": {
-        "$ref": "#/entities/UserProfile"
-      },
-      "description": "Stores user profile information, including preferred language. The `userId` path parameter should correspond to the user's Firebase Authentication UID."
-    },
     "/users/{userId}/mood_logs/{moodLogId}": {
       "schema": {
         "$ref": "#/entities/MoodLog"

@@ -5,26 +5,49 @@ import './globals.css';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { SidebarNav } from '@/components/shared/SidebarNav';
 import { Toaster } from '@/components/ui/toaster';
-import { Chatbot } from '@/components/shared/Chatbot';
+import { Chatbot, useChatbot } from '@/components/shared/Chatbot';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FirebaseClientProvider, useUser } from '@/firebase';
 
 function AppLayout({ children }: { children: React.ReactNode }) {
-  const { user, isUserLoading } = useUser();
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     // This check runs only on the client, after hydration.
-    if (!isUserLoading && user) {
-      setShowSidebar(true);
-    } else if (!isUserLoading && !user) {
-      setShowSidebar(false);
+    if (isClient) {
+      const isLoggedIn = !!localStorage.getItem('user_loggedin');
+      setShowSidebar(isLoggedIn);
     }
-  }, [user, isUserLoading, pathname]);
+  }, [isClient, pathname]);
+  
+   const { setOpen: openChatbot } = useChatbot();
 
-  if (isUserLoading && !showSidebar) {
+  useEffect(() => {
+    const role = isClient ? localStorage.getItem('user_role') : null;
+    if (role === 'student' || role === 'employee' || role === 'general') {
+       const onboardingComplete = localStorage.getItem(`${role}_onboarding_complete`);
+       if(onboardingComplete){
+            setTimeout(() => openChatbot(true), 500);
+       }
+    }
+  }, [isClient, openChatbot]);
+
+  if (isClient && !showSidebar) {
+    return (
+      <>
+        {children}
+        <Toaster />
+      </>
+    );
+  }
+  
+  if (!isClient && !showSidebar) {
       return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4">
             <h1 className="text-2xl font-headline">Loading...</h1>
@@ -34,18 +57,14 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      {showSidebar ? (
-        <Chatbot>
-          <SidebarProvider>
-              <Sidebar>
-                <SidebarNav />
-              </Sidebar>
-              <SidebarInset>{children}</SidebarInset>
-          </SidebarProvider>
-        </Chatbot>
-      ) : (
-        children
-      )}
+      <SidebarProvider>
+        <Sidebar>
+          <SidebarNav />
+        </Sidebar>
+        <SidebarInset>
+          <Chatbot>{children}</Chatbot>
+        </SidebarInset>
+      </SidebarProvider>
       <Toaster />
     </>
   );
@@ -66,9 +85,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <FirebaseClientProvider>
-          <AppLayout>{children}</AppLayout>
-        </FirebaseClientProvider>
+         <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );

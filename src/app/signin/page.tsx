@@ -6,20 +6,26 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, LogIn, Stethoscope } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from '@/hooks/use-translation';
-import { useUser } from '@/firebase';
 
 export default function WelcomeAuthPage() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { user, isUserLoading } = useUser();
+  const [isClient, setIsClient] = React.useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     // If user is already logged in, redirect to roles page
-    if (!isUserLoading && user) {
+    if (isClient && localStorage.getItem('user_loggedin')) {
       router.replace('/roles');
     }
-  }, [user, isUserLoading, router]);
+  }, [isClient, router]);
 
+  if (!isClient) {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
