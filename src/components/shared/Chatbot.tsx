@@ -129,88 +129,86 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <>
-      <Sheet open={isOpen} onOpenChange={setOpen}>
-        {children}
-        <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
-          <SheetHeader className="p-6 pb-4">
-            <SheetTitle className="font-headline flex items-center gap-2">
-              <Bot className="w-6 h-6 text-primary" />
-              EmpathiCare
-            </SheetTitle>
-            <SheetDescription>
-              Talk about your feelings. I am here to listen and help.
-            </SheetDescription>
-          </SheetHeader>
-          <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
-            <div className="space-y-4 pr-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex items-end gap-2 ${
-                    message.sender === 'user' ? 'justify-end' : ''
-                  }`}
-                >
-                  {message.sender === 'bot' && (
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        <Bot size={20} />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 text-sm ${
-                      message.sender === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}
-                  >
-                    {message.text}
-                  </div>
-                  {message.sender === 'user' && (
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        <User size={20} />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                </div>
-              ))}
-              {isBotTyping && (
-                 <div className="flex items-end gap-2">
+    <Sheet open={isOpen} onOpenChange={setOpen}>
+      {children}
+      <SheetContent className="w-full sm:max-w-md flex flex-col p-0">
+        <SheetHeader className="p-6 pb-4">
+          <SheetTitle className="font-headline flex items-center gap-2">
+            <Bot className="w-6 h-6 text-primary" />
+            EmpathiCare
+          </SheetTitle>
+          <SheetDescription>
+            Talk about your feelings. I am here to listen and help.
+          </SheetDescription>
+        </SheetHeader>
+        <ScrollArea className="flex-1 px-6" ref={scrollAreaRef}>
+          <div className="space-y-4 pr-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex items-end gap-2 ${
+                  message.sender === 'user' ? 'justify-end' : ''
+                }`}
+              >
+                {message.sender === 'bot' && (
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       <Bot size={20} />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="max-w-[80%] rounded-lg p-3 text-sm bg-muted">
-                    <div className="flex items-center gap-1">
-                      <span className="h-2 w-2 bg-foreground rounded-full animate-pulse [animation-delay:-0.3s]"></span>
-                      <span className="h-2 w-2 bg-foreground rounded-full animate-pulse [animation-delay:-0.15s]"></span>
-                      <span className="h-2 w-2 bg-foreground rounded-full animate-pulse"></span>
-                    </div>
+                )}
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 text-sm ${
+                    message.sender === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
+                  }`}
+                >
+                  {message.text}
+                </div>
+                {message.sender === 'user' && (
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>
+                      <User size={20} />
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            ))}
+            {isBotTyping && (
+               <div className="flex items-end gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    <Bot size={20} />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="max-w-[80%] rounded-lg p-3 text-sm bg-muted">
+                  <div className="flex items-center gap-1">
+                    <span className="h-2 w-2 bg-foreground rounded-full animate-pulse [animation-delay:-0.3s]"></span>
+                    <span className="h-2 w-2 bg-foreground rounded-full animate-pulse [animation-delay:-0.15s]"></span>
+                    <span className="h-2 w-2 bg-foreground rounded-full animate-pulse"></span>
                   </div>
                 </div>
-              )}
-            </div>
-          </ScrollArea>
-          <div className="p-6 bg-background border-t">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2">
-              <Input
-                {...register('message')}
-                placeholder="Type your message..."
-                className="flex-1"
-                autoComplete="off"
-                disabled={isSubmitting}
-              />
-              <Button type="submit" size="icon" disabled={isSubmitting}>
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
+              </div>
+            )}
           </div>
-        </SheetContent>
-      </Sheet>
-    </>
+        </ScrollArea>
+        <div className="p-6 bg-background border-t">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2">
+            <Input
+              {...register('message')}
+              placeholder="Type your message..."
+              className="flex-1"
+              autoComplete="off"
+              disabled={isSubmitting}
+            />
+            <Button type="submit" size="icon" disabled={isSubmitting}>
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
