@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -14,6 +13,9 @@ import { getZodiacSign, getAstrologicalMessage } from '@/lib/astrology';
 import BirthdayCelebration from '@/components/auth/BirthdayCelebration';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth, useFirestore, setDocumentNonBlocking } from '@/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc } from 'firebase/firestore';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -28,6 +30,8 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const firestore = useFirestore();
   const { toast } = useToast();
   const [user, setUser] = useState<{ name: string; dob: Date } | null>(null);
   const [showBirthday, setShowBirthday] = useState(false);
@@ -36,48 +40,56 @@ export default function RegisterPage() {
     resolver: zodResolver(formSchema),
   });
 
-  const getAge = (dob: Date) => {
-    const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-    }
-    return age;
-  }
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const dob = new Date(data.dob);
     const today = new Date();
-    const age = getAge(dob);
 
-    // Simulate storing user credentials
-    localStorage.setItem(`user_${data.email}`, JSON.stringify({ password: data.password, name: data.name, dob: data.dob }));
-    
-    // Simulate creating a session
-    localStorage.setItem('user_session', JSON.stringify({ name: data.name, email: data.email, age, dob: data.dob }));
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const firebaseUser = userCredential.user;
 
-    const zodiacSign = getZodiacSign(dob);
-    const astrologicalMessage = getAstrologicalMessage(zodiacSign, data.name);
+      if (firebaseUser) {
+        // Store additional user info in Firestore
+        const userProfileRef = doc(firestore, 'users', firebaseUser.uid);
+        const language = localStorage.getItem('user_language') || 'en';
+        
+        setDocumentNonBlocking(userProfileRef, {
+            email: data.email,
+            preferredLanguage: language,
+            birthDate: data.dob,
+            name: data.name,
+        }, { merge: true });
 
-    toast({
-      title: `Welcome, ${data.name}!`,
-      description: astrologicalMessage,
-      duration: 5000,
-    });
 
-    setUser({ name: data.name, dob });
+        const zodiacSign = getZodiacSign(dob);
+        const astrologicalMessage = getAstrologicalMessage(zodiacSign, data.name);
 
-    const handleRedirect = () => {
-      setTimeout(() => {
-          router.push('/roles');
-      }, 2000);
-    };
+        toast({
+          title: `Welcome, ${data.name}!`,
+          description: astrologicalMessage,
+          duration: 5000,
+        });
 
-    if (dob.getDate() === today.getDate() && dob.getMonth() === today.getMonth()) {
-      setShowBirthday(true);
-    } else {
-      handleRedirect();
+        setUser({ name: data.name, dob });
+
+        const handleRedirect = () => {
+          setTimeout(() => {
+              router.push('/roles');
+          }, 2000);
+        };
+
+        if (dob.getDate() === today.getDate() && dob.getMonth() === today.getMonth()) {
+          setShowBirthday(true);
+        } else {
+          handleRedirect();
+        }
+      }
+    } catch (error: any) {
+        toast({
+            title: 'Registration Failed',
+            description: error.message || 'Could not create your account.',
+            variant: 'destructive',
+        });
     }
   };
   

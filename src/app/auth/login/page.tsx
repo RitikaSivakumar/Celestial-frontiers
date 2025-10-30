@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -12,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -22,6 +23,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const auth = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,47 +31,22 @@ export default function LoginPage() {
     resolver: zodResolver(formSchema),
   });
 
-  const getAge = (dobString: string) => {
-    const dob = new Date(dobString);
-    const today = new Date();
-    let age = today.getFullYear() - dob.getFullYear();
-    const m = today.getMonth() - dob.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-    }
-    return age;
-  }
-
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const storedUserRaw = localStorage.getItem(`user_${data.email}`);
-    
-    if (storedUserRaw) {
-        const storedUser = JSON.parse(storedUserRaw);
-        if (storedUser.password === data.password) {
-            toast({
-                title: 'Login Successful',
-                description: `Welcome back, ${storedUser.name}!`,
-            });
-            const age = getAge(storedUser.dob);
-            localStorage.setItem('user_session', JSON.stringify({ name: storedUser.name, email: data.email, age, dob: storedUser.dob }));
-            router.push('/roles');
-        } else {
-            toast({
-                title: 'Login Failed',
-                description: 'Invalid email or password.',
-                variant: 'destructive',
-            });
-            setIsSubmitting(false);
-        }
-    } else {
-        toast({
-            title: 'Login Failed',
-            description: 'No account found with this email.',
-            variant: 'destructive',
-        });
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      toast({
+        title: 'Login Successful',
+        description: 'Welcome back!',
+      });
+      router.push('/roles');
+    } catch (error: any) {
+      toast({
+        title: 'Login Failed',
+        description: error.message || 'Invalid email or password.',
+        variant: 'destructive',
+      });
+    } finally {
         setIsSubmitting(false);
     }
   };

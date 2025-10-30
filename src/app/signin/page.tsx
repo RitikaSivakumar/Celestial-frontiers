@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -7,17 +6,19 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, LogIn, Stethoscope } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from '@/hooks/use-translation';
+import { useUser } from '@/firebase';
 
 export default function WelcomeAuthPage() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { user, isUserLoading } = useUser();
 
   useEffect(() => {
     // If user is already logged in, redirect to roles page
-    if (localStorage.getItem('user_session')) {
+    if (!isUserLoading && user) {
       router.replace('/roles');
     }
-  }, [router]);
+  }, [user, isUserLoading, router]);
 
 
   return (

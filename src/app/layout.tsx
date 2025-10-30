@@ -1,4 +1,3 @@
-
 'use client';
 
 import './globals.css';
@@ -8,22 +7,54 @@ import { Toaster } from '@/components/ui/toaster';
 import { Chatbot } from '@/components/shared/Chatbot';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { FirebaseClientProvider, useUser } from '@/firebase';
+
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const { user, isUserLoading } = useUser();
+  const pathname = usePathname();
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  useEffect(() => {
+    // This check runs only on the client, after hydration.
+    if (!isUserLoading && user) {
+      setShowSidebar(true);
+    } else if (!isUserLoading && !user) {
+      setShowSidebar(false);
+    }
+  }, [user, isUserLoading, pathname]);
+
+  if (isUserLoading && !showSidebar) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+            <h1 className="text-2xl font-headline">Loading...</h1>
+        </div>
+      )
+  }
+
+  return (
+    <>
+      {showSidebar ? (
+        <SidebarProvider>
+          <Chatbot>
+            <Sidebar>
+              <SidebarNav />
+            </Sidebar>
+            <SidebarInset>{children}</SidebarInset>
+          </Chatbot>
+        </SidebarProvider>
+      ) : (
+        children
+      )}
+      <Toaster />
+    </>
+  );
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => {
-    // This check runs only on the client, after hydration.
-    if (localStorage.getItem('user_session')) {
-      setShowSidebar(true);
-    }
-  }, [pathname]); // Re-check when the user navigates
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -34,19 +65,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {showSidebar ? (
-          <SidebarProvider>
-              <Chatbot>
-                <Sidebar>
-                  <SidebarNav />
-                </Sidebar>
-                <SidebarInset>{children}</SidebarInset>
-              </Chatbot>
-          </SidebarProvider>
-        ) : (
-          children
-        )}
-        <Toaster />
+        <FirebaseClientProvider>
+          <AppLayout>{children}</AppLayout>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

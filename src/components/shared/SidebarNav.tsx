@@ -1,4 +1,3 @@
-
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
@@ -29,6 +28,7 @@ import {
 import Link from 'next/link';
 import { Logo } from './Icons';
 import { ChatbotTrigger } from './Chatbot';
+import { useAuth } from '@/firebase';
 
 const menuItems = [
   { href: '/diary', label: 'Diary', icon: BookHeart },
@@ -45,11 +45,12 @@ const menuItems = [
 export function SidebarNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const auth = useAuth();
 
   const isDashboard = pathname.startsWith('/dashboard');
 
   const handleLogout = () => {
-    localStorage.removeItem('user_session');
+    auth.signOut();
     router.push('/signin');
   };
 
