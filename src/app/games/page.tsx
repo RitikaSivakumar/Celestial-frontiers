@@ -1,13 +1,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Sprout, Waves } from "lucide-react";
+import { Sprout, Waves, Flower } from "lucide-react";
 import Link from 'next/link';
 
 const games = [
     {
         title: "Bubble Pop",
         icon: <Sprout className="w-6 h-6 text-primary" />,
-        prompt: "Now we’re in Bubble Pop mode. Bubbles drift gently across the screen in soft pastel colours. Tap any bubble you like. It pops quietly—listen to the subtle ‘pop’, watch the bubble disappear, notice the little movement of nearby bubbles. Take a slow breath in… and as you exhale, pop another bubble. No rush. Just calm tapping, gentle rhythm. When you’ve popped enough, drift softly back into stillness.",
+        prompt: "Bubbles drift gently across the screen in soft pastel colours. Tap any bubble you like. It pops quietly—listen to the subtle ‘pop’, watch the bubble disappear, notice the little movement of nearby bubbles. Take a slow breath in… and as you exhale, pop another bubble. No rush. Just calm tapping, gentle rhythm.",
         href: "/games/bubble-pop"
     },
     {
@@ -15,6 +15,12 @@ const games = [
         icon: <Waves className="w-6 h-6 text-primary" />,
         prompt: "Welcome to your Zen Garden. Here, the sand awaits your touch. Use your mouse or finger to draw patterns, creating ripples and lines. There are no goals, no scores—only the gentle act of creation. Breathe, draw, and find your moment of calm.",
         href: "/games/zen-garden"
+    },
+    {
+        title: "Mind Bloom",
+        icon: <Flower className="w-6 h-6 text-primary" />,
+        prompt: "Help a flower grow with each gentle tap. Watch it bloom from a tiny sprout to a beautiful flower, accompanied by calming sounds. A simple game to find a moment of peace and focus.",
+        href: "/games/mind-bloom"
     }
 ];
 
@@ -39,7 +45,7 @@ export default function RelaxationGamesPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <CardDescription className="whitespace-pre-wrap">
+                                <CardDescription>
                                     {game.prompt}
                                 </CardDescription>
                             </CardContent>
