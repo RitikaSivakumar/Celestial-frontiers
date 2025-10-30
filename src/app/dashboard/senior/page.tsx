@@ -3,6 +3,7 @@ import { Phone, Heart, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import SymptomChecker from '@/components/dashboard/SymptomChecker';
 
 export default function SeniorDashboard() {
   return (
@@ -16,21 +17,7 @@ export default function SeniorDashboard() {
         </p>
       </header>
 
-      <Card className="bg-primary/10 border-primary">
-        <CardHeader>
-          <CardTitle className="font-headline text-center">A Moment of Calm</CardTitle>
-        </CardHeader>
-        <CardContent className="text-center">
-          <p className="text-lg mb-4">Let's take a deep breath together.</p>
-          <div className="flex justify-center items-center gap-4 text-lg font-semibold text-primary">
-            <span>Inhale</span>
-            <span className="text-2xl">•</span>
-            <span>Hold</span>
-            <span className="text-2xl">•</span>
-            <span>Exhale</span>
-          </div>
-        </CardContent>
-      </Card>
+      <SymptomChecker />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="hover:shadow-lg transition-shadow">
