@@ -1,5 +1,14 @@
 import { PlaceHolderImages } from './placeholder-images';
 
+export type Patient = {
+  id: number;
+  name: string;
+  lastCheckin: string;
+  phq9: number;
+  gad7: number;
+  doctorId: number;
+};
+
 export const sevenDayPlan = [
   { day: 'Day 1', task: 'Mindful Breathing', completed: true },
   { day: 'Day 2', task: 'Light Movement', completed: true },
@@ -40,7 +49,7 @@ export const doctors = [
   },
 ];
 
-export const patients = [
+export const patients: Patient[] = [
     { id: 1, name: 'Alex Johnson', lastCheckin: '2 days ago', phq9: 12, gad7: 9, doctorId: 1 },
     { id: 2, name: 'Maria Garcia', lastCheckin: '5 days ago', phq9: 18, gad7: 15, doctorId: 1 },
     { id: 3, name: 'Sameer Khan', lastCheckin: '1 day ago', phq9: 7, gad7: 5, doctorId: 2 },
