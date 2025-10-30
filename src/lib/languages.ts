@@ -18,7 +18,7 @@ export const languages = [
     { name: 'মৈতৈলোন্ (Manipuri)', code: 'mni' },
     { name: 'नेपाली (Nepali)', code: 'ne' },
     { name: 'संस्कृतम् (Sanskrit)', code: 'sa' },
-    { name: 'सिन्धी (Sindhi)', code: 'sd' },
+    { name: 'सिन्धी (Sindhi)', code 'sd' },
     { name: 'मैथिली (Maithili)', code: 'mai' },
     { name: 'बोड़ो (Bodo)', code: 'brx' },
     { name: 'संताली (Santhali)', code: 'sat' },

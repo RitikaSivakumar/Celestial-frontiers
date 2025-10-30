@@ -1,0 +1,12 @@
+
+{
+    "welcome_title": "मेडफिनिटी में आपका स्वागत है",
+    "welcome_description": "जारी रखने के लिए कृपया अपनी भूमिका चुनें।",
+    "new_user_button": "नया उपयोगकर्ता",
+    "existing_user_button": "मौजूदा उपयोगकर्ता",
+    "doctor_button": "डॉक्टर",
+    "language_selector_placeholder": "एक भाषा चुनें",
+    "language_selector_description": "अपने अनुभव को वैयक्तिकृत करने के लिए अपनी पसंदीदा भाषा चुनें।",
+    "language_updated_toast_title": "भाषा अपडेट की गई",
+    "language_updated_toast_description": "ऐप की भाषा {languageName} पर सेट कर दी गई है।"
+}

@@ -1,0 +1,12 @@
+
+{
+    "welcome_title": "Welcome to Medfinity",
+    "welcome_description": "Please select your role to continue.",
+    "new_user_button": "New User",
+    "existing_user_button": "Existing User",
+    "doctor_button": "Doctor",
+    "language_selector_placeholder": "Select a language",
+    "language_selector_description": "Select your preferred language to personalize your experience.",
+    "language_updated_toast_title": "Language Updated",
+    "language_updated_toast_description": "The app language has been set to {languageName}."
+}
