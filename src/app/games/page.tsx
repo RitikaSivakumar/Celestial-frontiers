@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Sprout, Waves, Flower } from "lucide-react";
+import { Sprout, Waves, Flower, Palette } from "lucide-react";
 import Link from 'next/link';
 
 const games = [
@@ -21,6 +21,12 @@ const games = [
         icon: <Flower className="w-6 h-6 text-primary" />,
         prompt: "Help a flower grow with each gentle tap. Watch it bloom from a tiny sprout to a beautiful flower, accompanied by calming sounds. A simple game to find a moment of peace and focus.",
         href: "/games/mind-bloom"
+    },
+    {
+        title: "Mood Match",
+        icon: <Palette className="w-6 h-6 text-primary" />,
+        prompt: "A simple puzzle to connect emotions with colors. Match the words to their corresponding hues and find harmony in the palette of feelings. A gentle exercise for your mind.",
+        href: "/games/mood-match"
     }
 ];
 
