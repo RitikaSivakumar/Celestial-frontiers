@@ -1,10 +1,12 @@
+
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import MoodTracker from "@/components/dashboard/MoodTracker";
 import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
 import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wind, Music, Gamepad2 } from "lucide-react";
+import { Wind, Gamepad2 } from "lucide-react";
 import Link from "next/link";
+import SoothingSongs from "@/components/dashboard/SoothingSongs";
 
 export default function EmployeeDashboard() {
   return (
@@ -41,13 +43,7 @@ export default function EmployeeDashboard() {
                             </div>
                         </div>
                     </Link>
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Music className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Soothing Songs</h3>
-                            <p className="text-sm text-muted-foreground">Listen to curated playlists.</p>
-                        </div>
-                    </div>
+                    <SoothingSongs />
                 </CardContent>
             </Card>
           </div>

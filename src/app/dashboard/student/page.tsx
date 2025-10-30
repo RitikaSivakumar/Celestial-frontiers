@@ -1,10 +1,12 @@
+
 import WelcomeHeader from "@/components/dashboard/WelcomeHeader";
 import MoodTracker from "@/components/dashboard/MoodTracker";
 import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
 import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, Gamepad2, Headphones } from "lucide-react";
+import { Book, Gamepad2 } from "lucide-react";
 import Link from "next/link";
+import SoothingSongs from "@/components/dashboard/SoothingSongs";
 
 export default function StudentDashboard() {
   return (
@@ -39,13 +41,7 @@ export default function StudentDashboard() {
                             <p className="text-sm text-muted-foreground">Reflect on your day.</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Headphones className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Soothing Music</h3>
-                            <p className="text-sm text-muted-foreground">Listen to calming tunes.</p>
-                        </div>
-                    </div>
+                    <SoothingSongs />
                 </CardContent>
             </Card>
           </div>
