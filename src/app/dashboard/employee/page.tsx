@@ -4,6 +4,7 @@ import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
 import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wind, Music, Gamepad2 } from "lucide-react";
+import Link from "next/link";
 
 export default function EmployeeDashboard() {
   return (
@@ -22,13 +23,15 @@ export default function EmployeeDashboard() {
                     <CardTitle className="font-headline">Mindfulness Activities</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Wind className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Breathing Rhythm</h3>
-                            <p className="text-sm text-muted-foreground">Sync your breath, find your calm.</p>
+                    <Link href="/breathing">
+                        <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
+                            <Wind className="w-6 h-6 text-primary"/>
+                            <div>
+                                <h3 className="font-semibold">Breathing Rhythm</h3>
+                                <p className="text-sm text-muted-foreground">Sync your breath, find your calm.</p>
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
                         <Gamepad2 className="w-6 h-6 text-primary"/>
                         <div>

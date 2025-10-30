@@ -20,6 +20,7 @@ import {
   Bot,
   Home,
   FileText,
+  Wind,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
@@ -32,6 +33,7 @@ const menuItems = [
   { href: '/medications', label: 'Medications', icon: Pill },
   { href: '/doctors', label: 'Doctors', icon: Stethoscope },
   { href: '/assessment', label: 'Assessment', icon: FileText },
+  { href: '/breathing', label: 'Breathing', icon: Wind },
 ];
 
 export function SidebarNav() {
