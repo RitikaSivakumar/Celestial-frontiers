@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Gamepad2, Sprout, Paintbrush, Waves, Puzzle } from "lucide-react";
 
@@ -5,7 +6,7 @@ const games = [
     {
         title: "Sand Garden",
         icon: <Gamepad2 className="w-6 h-6 text-primary" />,
-        prompt: "Welcome to your Sand Garden. Use your fingertip to drag through the soft sand‐tray and create patterns: smooth ripples, gentle waves, curved lines. There’s no wrong way—just feel the texture under your finger, and watch the sand respond with soothing motion. If you like, pick up the polished stones and move them slowly to new positions, noticing the subtle shift in weight and stillness around them. When you’re ready, let the pattern fade and breathe. Play for as long as you like."
+        prompt: "Welcome to your Sand Garden — a tranquil space for calm and creativity.\n\nUse your fingertip to gently glide across the soft sand tray and create soothing patterns — smooth ripples, gentle waves, curved lines. There’s no right or wrong way to play — just move slowly and feel the serenity in each motion.\n\nYou can pick up the polished stones and place them anywhere you wish. Notice how each movement changes the balance and stillness of your garden.\n\nIf you like, save your creation to return later, or let the ripples fade away naturally as you breathe and relax.\n\nTake a deep breath.\nThis moment is yours.\n\n🪷 Focus: Calm · Mindful · Creative\n\n✨ Play for as long as you like… the sand always welcomes you back."
     },
     {
         title: "Bubble Pop",
@@ -49,7 +50,7 @@ export default function RelaxationGamesPage() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <CardDescription>
+                            <CardDescription className="whitespace-pre-wrap">
                                 {game.prompt}
                             </CardDescription>
                         </CardContent>
