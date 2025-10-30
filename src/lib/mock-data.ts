@@ -29,27 +29,30 @@ export const medications = [
 export const doctors = [
   {
     id: 1,
-    name: 'Dr. Emily Carter',
+    name: 'Dr. Prasheetha',
     specialty: 'Clinical Psychologist',
-    description: 'Dr. Carter specializes in cognitive-behavioral therapy and has over 10 years of experience helping patients with anxiety and depression.',
+    description: 'Dr. Prasheetha specializes in cognitive-behavioral therapy and holds the "Excellence in Empathy" award. She has over 10 years of experience helping patients with anxiety and depression.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageHint || '',
+    phone: '9080905858',
   },
   {
     id: 2,
-    name: 'Dr. Ben Adams',
+    name: 'Dr. Srija',
     specialty: 'Psychiatrist',
-    description: 'Dr. Adams focuses on holistic mental health, combining medication management with mindfulness practices for comprehensive care.',
+    description: 'Dr. Srija focuses on holistic mental health, combining medication management with mindfulness practices. She is a recipient of the "Holistic Healer" prize for her innovative care.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageHint || '',
+    phone: '6384020021',
   },
   {
     id: 3,
-    name: 'Dr. Chloe Davis',
+    name: 'Dr. Vibhu',
     specialty: 'Licensed Counselor',
-    description: 'Chloe Davis is a compassionate counselor who provides a safe space for individuals to explore their feelings and develop coping strategies.',
+    description: 'Dr. Vibhu is a compassionate counselor recognized with the "Community Wellness" award. He provides a safe space for individuals to explore their feelings and develop coping strategies.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageHint || '',
+    phone: '9842894422',
   },
 ];
 

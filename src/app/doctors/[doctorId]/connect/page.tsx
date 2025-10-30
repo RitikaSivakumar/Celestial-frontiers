@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Phone } from 'lucide-react'
+import { Phone, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DoctorConnectPage() {
@@ -37,11 +37,14 @@ export default function DoctorConnectPage() {
             You are about to start a session. Please ensure you are in a quiet and private space.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="flex-1">
-              <Phone className="mr-2"/>
-              Start Video Call
-            </Button>
+             <a href={`tel:${doctor.phone}`} className="flex-1">
+              <Button size="lg" className="w-full">
+                <Phone className="mr-2"/>
+                Call Doctor
+              </Button>
+            </a>
              <Button size="lg" variant="outline" className="flex-1">
+                <MessageCircle className="mr-2"/>
               Start Chat
             </Button>
           </div>

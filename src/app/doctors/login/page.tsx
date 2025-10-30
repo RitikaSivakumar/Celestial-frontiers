@@ -23,9 +23,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const doctorCredentials = [
-    { email: 'doc1@example.com', password: '1234', id: 1 },
-    { email: 'doc2@example.com', password: '567', id: 2 },
-    { email: 'doc3@example.com', password: '8910', id: 3 },
+    { email: 'prasheetha@example.com', password: 'password1', id: 1 },
+    { email: 'srija@example.com', password: 'password2', id: 2 },
+    { email: 'vibhu@example.com', password: 'password3', id: 3 },
 ];
 
 export default function DoctorLoginPage() {
