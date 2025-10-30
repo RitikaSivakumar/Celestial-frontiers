@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { UserPlus, LogIn, Stethoscope } from 'lucide-react';
 import { useEffect } from 'react';
-import LanguageSelector from '@/components/shared/LanguageSelector';
 import { useTranslation } from '@/hooks/use-translation';
 
 export default function WelcomeAuthPage() {
@@ -43,9 +42,8 @@ export default function WelcomeAuthPage() {
             </Button>
         </CardContent>
         <CardFooter className="flex-col gap-4">
-            <LanguageSelector />
             <p className="text-xs text-muted-foreground pt-2">
-                {t('language_selector_description')}
+                Select your role to continue.
             </p>
         </CardFooter>
       </Card>
