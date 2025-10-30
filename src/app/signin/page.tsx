@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from '@/hooks/use-toast';
 import { getZodiacSign, getAstrologicalMessage } from '@/lib/astrology';
 import BirthdayCelebration from '@/components/auth/BirthdayCelebration';
+import { LogIn } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -93,6 +94,7 @@ export default function SignInPage() {
               {errors.dob && <p className="text-destructive text-sm">{errors.dob.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <LogIn className="mr-2 h-4 w-4" />
               {isSubmitting ? 'Connecting...' : 'Connect with Stars'}
             </Button>
           </form>
