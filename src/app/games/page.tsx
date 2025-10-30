@@ -1,31 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Gamepad2, Sprout, Paintbrush, Ear, Puzzle } from "lucide-react";
+import { Gamepad2, Sprout, Paintbrush, Waves, Puzzle } from "lucide-react";
 
 const games = [
     {
-        title: "Gentle Pause",
-        icon: <Sprout className="w-6 h-6 text-primary" />,
-        prompt: "Find a comfortable spot and gently tap the screen to release your worries. Each tap sends a ripple of calm through the scene. No timers. No pressure. Just you, this moment, and the soft rhythm of letting go."
-    },
-    {
-        title: "Colour & Flow",
-        icon: <Paintbrush className="w-6 h-6 text-primary" />,
-        prompt: "Choose a soothing palette and swirl your fingertip across the canvas. Watch colours merge, shapes loosen, and tension fade. When you feel ready, let the form fade into nothingness—and feel a little lighter."
-    },
-    {
-        title: "Sound-scape Escape",
-        icon: <Ear className="w-6 h-6 text-primary" />,
-        prompt: "Close your eyes (if you like), put on your headphones, and just listen. Every time you hear a gentle sound—wind through leaves, water lapping, distant chime—tap to collect it. Observe how your body softens. Let the ambient sounds guide you to stillness."
-    },
-    {
-        title: "Mindful Matching",
-        icon: <Puzzle className="w-6 h-6 text-primary" />,
-        prompt: "Ready for a quiet challenge? Match pairs of soft-shaded tiles. No leaderboard. No hurry. With each successful match, take a slow inhale… and as the tiles disappear, exhale. Let the matching become a breathing rhythm."
-    },
-    {
-        title: "Virtual Garden Ritual",
+        title: "Sand Garden",
         icon: <Gamepad2 className="w-6 h-6 text-primary" />,
-        prompt: "Welcome to your personal stress-garden. Tap to plant a seed. Pull your finger slowly to shape the petals. Let the flower bloom under your touch—and as it opens, imagine your thoughts opening and expanding, becoming lighter. You may revisit any time this garden calls you."
+        prompt: "Welcome to your Sand Garden. Use your fingertip to drag through the soft sand‐tray and create patterns: smooth ripples, gentle waves, curved lines. There’s no wrong way—just feel the texture under your finger, and watch the sand respond with soothing motion. If you like, pick up the polished stones and move them slowly to new positions, noticing the subtle shift in weight and stillness around them. When you’re ready, let the pattern fade and breathe. Play for as long as you like."
+    },
+    {
+        title: "Bubble Pop",
+        icon: <Sprout className="w-6 h-6 text-primary" />,
+        prompt: "Now we’re in Bubble Pop mode. Bubbles drift gently across the screen in soft pastel colours. Tap any bubble you like. It pops quietly—listen to the subtle ‘pop’, watch the bubble disappear, notice the little movement of nearby bubbles. Take a slow breath in… and as you exhale, pop another bubble. No rush. Just calm tapping, gentle rhythm. When you’ve popped enough, drift softly back into stillness."
+    },
+    {
+        title: "Ripple Pond",
+        icon: <Waves className="w-6 h-6 text-primary" />,
+        prompt: "Imagine you’re by a quiet pond. Tap the water’s surface anywhere and watch concentric ripples expand outward. Then tap somewhere else, add another ripple. Then another. See how the waves move, overlap, slow down. Pause. Breathe in as the first ripple starts, breathe out as it disappears. Continue for a few taps, exploring the calming effect. When you’re ready, let the pond still."
+    },
+    {
+        title: "Zen Match",
+        icon: <Puzzle className="w-6 h-6 text-primary" />,
+        prompt: "Time for a mindful match-tile game, but at your pace. You’ll see a board of softly-shaded tiles. Tap two matching tiles to clear them. There’s no timer, no leaderboard, no rush. With every match you make: take a slow inhale… and as the tiles disappear, take a slow exhale. Let your mind soften. Continue matching until you feel ready to stop and just observe the empty board for a moment."
+    },
+    {
+        title: "Zen Brush / Free Paint",
+        icon: <Paintbrush className="w-6 h-6 text-primary" />,
+        prompt: "Pick your brush, pick your colour. This is your canvas—draw, doodle, swirl, paint without judgement. Slow strokes. Soft colours. As you move your finger, imagine the colour flowing from your fingertips into the screen, and any tension flowing out. If you like, tap ‘erase’ gently and let the stroke fade. There’s no goal, just your expression. When you feel done, step back, take a breath, and observe your creation or let it fade into blankness."
     }
 ];
 
