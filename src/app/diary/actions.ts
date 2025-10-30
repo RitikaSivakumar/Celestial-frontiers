@@ -1,3 +1,4 @@
+
 'use server';
 
 import {promises as fs} from 'fs';
@@ -10,10 +11,33 @@ type DiaryEntry = {
 
 const filePath = path.join(process.cwd(), 'src/lib/diary-entries.json');
 
+async function readEntries(): Promise<DiaryEntry[]> {
+    try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        return JSON.parse(fileContent);
+    } catch (error) {
+        // If file doesn't exist or is empty, return empty array
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return [];
+        }
+        console.error('Error reading diary entries:', error);
+        return [];
+    }
+}
+
+export async function getDiaryEntries(): Promise<DiaryEntry[]> {
+    const entries = await readEntries();
+    // Return entries sorted by date, newest first
+    return entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export async function getDiaryEntriesForBackup(): Promise<DiaryEntry[]> {
+    return readEntries();
+}
+
 export async function saveDiaryEntry(entry: string) {
   try {
-    const fileContent = await fs.readFile(filePath, 'utf-8');
-    const entries: DiaryEntry[] = JSON.parse(fileContent);
+    const entries = await readEntries();
 
     const newEntry: DiaryEntry = {
       entry,
