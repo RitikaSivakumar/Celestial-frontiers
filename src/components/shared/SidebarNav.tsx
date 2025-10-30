@@ -17,13 +17,14 @@ import {
   Pill,
   Stethoscope,
   Bot,
+  Home,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
 import { ChatbotTrigger } from './Chatbot';
 
 const menuItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/', label: 'Home', icon: Home },
   { href: '/diary', label: 'Diary', icon: BookHeart },
   { href: '/routine', label: 'Routine', icon: ClipboardCheck },
   { href: '/reports', label: 'Reports', icon: BarChart3 },
@@ -33,6 +34,8 @@ const menuItems = [
 
 export function SidebarNav() {
   const pathname = usePathname();
+
+  const isDashboard = pathname.startsWith('/dashboard');
 
   return (
     <>
@@ -44,6 +47,17 @@ export function SidebarNav() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
+            <SidebarMenuItem>
+                <Link href="/dashboard/general" legacyBehavior passHref>
+                    <SidebarMenuButton
+                    isActive={isDashboard}
+                    tooltip="Dashboard"
+                    >
+                    <LayoutDashboard />
+                    <span>Dashboard</span>
+                    </SidebarMenuButton>
+                </Link>
+            </SidebarMenuItem>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href} legacyBehavior passHref>
