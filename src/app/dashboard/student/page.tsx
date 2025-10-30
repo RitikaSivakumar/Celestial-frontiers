@@ -4,6 +4,7 @@ import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
 import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Book, Gamepad2, Headphones } from "lucide-react";
+import Link from "next/link";
 
 export default function StudentDashboard() {
   return (
@@ -22,13 +23,15 @@ export default function StudentDashboard() {
                     <CardTitle className="font-headline">Relaxation Activities</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Gamepad2 className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Quick Games</h3>
-                            <p className="text-sm text-muted-foreground">Unwind with a fun game.</p>
+                    <Link href="/games" passHref>
+                        <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
+                            <Gamepad2 className="w-6 h-6 text-primary"/>
+                            <div>
+                                <h3 className="font-semibold">Quick Games</h3>
+                                <p className="text-sm text-muted-foreground">Unwind with a fun game.</p>
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
                         <Book className="w-6 h-6 text-primary"/>
                         <div>

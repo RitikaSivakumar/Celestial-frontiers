@@ -23,7 +23,7 @@ export default function EmployeeDashboard() {
                     <CardTitle className="font-headline">Mindfulness Activities</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-4">
-                    <Link href="/breathing">
+                    <Link href="/breathing" passHref>
                         <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
                             <Wind className="w-6 h-6 text-primary"/>
                             <div>
@@ -32,13 +32,15 @@ export default function EmployeeDashboard() {
                             </div>
                         </div>
                     </Link>
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Gamepad2 className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Relaxation Games</h3>
-                            <p className="text-sm text-muted-foreground">Unwind with a quick game.</p>
+                    <Link href="/games" passHref>
+                        <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
+                            <Gamepad2 className="w-6 h-6 text-primary"/>
+                            <div>
+                                <h3 className="font-semibold">Relaxation Games</h3>
+                                <p className="text-sm text-muted-foreground">Unwind with a quick game.</p>
+                            </div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
                         <Music className="w-6 h-6 text-primary"/>
                         <div>

@@ -21,6 +21,7 @@ import {
   Home,
   FileText,
   Wind,
+  Gamepad2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
@@ -34,6 +35,7 @@ const menuItems = [
   { href: '/doctors', label: 'Doctors', icon: Stethoscope },
   { href: '/assessment', label: 'Assessment', icon: FileText },
   { href: '/breathing', label: 'Breathing', icon: Wind },
+  { href: '/games', label: 'Games', icon: Gamepad2 },
 ];
 
 export function SidebarNav() {
