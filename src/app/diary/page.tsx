@@ -6,12 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Save } from 'lucide-react';
+import { saveDiaryEntry } from './actions';
 
 export default function DiaryPage() {
   const [entry, setEntry] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (entry.trim() === '') {
       toast({
         title: 'Empty Entry',
@@ -20,13 +22,24 @@ export default function DiaryPage() {
       });
       return;
     }
-    // For now, we'll just show a toast. In the future, this would save to a database.
-    console.log('Diary Entry Saved:', entry);
-    toast({
-      title: 'Entry Saved',
-      description: 'Your thoughts have been recorded.',
-    });
-    setEntry('');
+    
+    setIsSaving(true);
+    const result = await saveDiaryEntry(entry);
+    setIsSaving(false);
+
+    if (result.success) {
+      toast({
+        title: 'Entry Saved',
+        description: 'Your thoughts have been recorded.',
+      });
+      setEntry('');
+    } else {
+        toast({
+            title: 'Error',
+            description: result.error || 'Could not save your entry.',
+            variant: 'destructive',
+        });
+    }
   };
 
   return (
@@ -47,10 +60,11 @@ export default function DiaryPage() {
             className="min-h-[300px] text-base"
             value={entry}
             onChange={(e) => setEntry(e.target.value)}
+            disabled={isSaving}
           />
-          <Button onClick={handleSave} className="mt-4 w-full">
+          <Button onClick={handleSave} className="mt-4 w-full" disabled={isSaving}>
             <Save className="mr-2" />
-            Save Entry
+            {isSaving ? 'Saving...' : 'Save Entry'}
           </Button>
         </CardContent>
       </Card>
