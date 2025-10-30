@@ -1,3 +1,4 @@
+
 'use client';
 
 import './globals.css';
@@ -34,14 +35,14 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {showSidebar ? (
-        <SidebarProvider>
-          <Chatbot>
-            <Sidebar>
-              <SidebarNav />
-            </Sidebar>
-            <SidebarInset>{children}</SidebarInset>
-          </Chatbot>
-        </SidebarProvider>
+        <Chatbot>
+          <SidebarProvider>
+              <Sidebar>
+                <SidebarNav />
+              </Sidebar>
+              <SidebarInset>{children}</SidebarInset>
+          </SidebarProvider>
+        </Chatbot>
       ) : (
         children
       )}
