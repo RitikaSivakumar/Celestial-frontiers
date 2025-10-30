@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Bubble from '@/components/games/bubble-pop/Bubble';
 import './styles.css';
 import { Button } from '@/components/ui/button';
-import { Music, MusicOff } from 'lucide-react';
+import { Music, VolumeX } from 'lucide-react';
 
 type BubbleData = {
   id: number;
@@ -73,7 +73,7 @@ export default function BubblePopPage() {
         Score: {score}
       </div>
        <Button onClick={() => setIsMusicOn(prev => !prev)} variant="ghost" size="icon" className="absolute top-4 right-4 z-10">
-        {isMusicOn ? <Music /> : <MusicOff />}
+        {isMusicOn ? <Music /> : <VolumeX />}
         <span className="sr-only">Toggle Music</span>
       </Button>
 
