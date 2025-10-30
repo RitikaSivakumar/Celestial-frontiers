@@ -4,7 +4,7 @@ import MoodTracker from "@/components/dashboard/MoodTracker";
 import RoutineBuilder from "@/components/dashboard/RoutineBuilder";
 import WeeklyReportSummary from "@/components/dashboard/WeeklyReportSummary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, Gamepad2 } from "lucide-react";
+import { Book, Gamepad2, Users } from "lucide-react";
 import Link from "next/link";
 import SoothingSongs from "@/components/dashboard/SoothingSongs";
 
@@ -42,6 +42,15 @@ export default function StudentDashboard() {
                               <p className="text-sm text-muted-foreground">Reflect on your day.</p>
                           </div>
                       </div>
+                    </Link>
+                     <Link href="/peer-support" passHref>
+                        <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
+                            <Users className="w-6 h-6 text-primary"/>
+                            <div>
+                                <h3 className="font-semibold">Peer Support</h3>
+                                <p className="text-sm text-muted-foreground">Connect with the community.</p>
+                            </div>
+                        </div>
                     </Link>
                     <SoothingSongs />
                 </CardContent>

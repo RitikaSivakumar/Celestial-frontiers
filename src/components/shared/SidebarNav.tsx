@@ -24,6 +24,7 @@ import {
   Wind,
   Gamepad2,
   LogOut,
+  Users,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
@@ -38,6 +39,7 @@ const menuItems = [
   { href: '/assessment', label: 'Assessment', icon: FileText },
   { href: '/breathing', label: 'Breathing', icon: Wind },
   { href: '/games', label: 'Games', icon: Gamepad2 },
+  { href: '/peer-support', label: 'Peer Support', icon: Users },
 ];
 
 export function SidebarNav() {
