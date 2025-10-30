@@ -36,7 +36,7 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your AI companion. How are you feeling today?",
+      text: "Hello! I'm EmpathiCare, your AI companion. How are you feeling today?",
       sender: 'bot',
     },
   ]);
@@ -74,11 +74,10 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
       const result = await analyzeSentimentAndSuggestActivity({ userInput });
       let botResponse: React.ReactNode;
 
-      if (result) {
+      if (result && result.response) {
         botResponse = (
           <div>
-            <p>I'm sensing that you might be feeling a bit <span className="font-semibold">{result.sentiment}</span>.</p>
-            <p className="mt-2">{result.suggestedActivity}</p>
+            <p>{result.response}</p>
           </div>
         );
       } else {
@@ -111,7 +110,7 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
         <SheetHeader className="p-6 pb-4">
           <SheetTitle className="font-headline flex items-center gap-2">
             <Bot className="w-6 h-6 text-primary" />
-            AI Companion
+            EmpathiCare
           </SheetTitle>
           <SheetDescription>
             Talk about your feelings. I am here to listen and help.
