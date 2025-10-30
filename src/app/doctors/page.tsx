@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { doctors } from '@/lib/mock-data';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Stethoscope } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DoctorsPage() {
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-4xl font-headline mb-2">Connect with a Professional</h1>
-      <p className="text-muted-foreground mb-8">Find a verified doctor to support you on your journey.</p>
+      <h1 className="text-4xl font-headline mb-2">Doctor Dashboard Portal</h1>
+      <p className="text-muted-foreground mb-8">Select your profile to access your patient dashboard.</p>
       
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {doctors.map(doctor => (
@@ -34,7 +35,9 @@ export default function DoctorsPage() {
               </p>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Connect</Button>
+              <Button asChild className="w-full">
+                <Link href={`/doctors/${doctor.id}`}>View Dashboard</Link>
+              </Button>
             </CardFooter>
           </Card>
         ))}

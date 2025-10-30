@@ -40,6 +40,15 @@ export const doctors = [
   },
 ];
 
+export const patients = [
+    { id: 1, name: 'Alex Johnson', lastCheckin: '2 days ago', phq9: 12, gad7: 9, doctorId: 1 },
+    { id: 2, name: 'Maria Garcia', lastCheckin: '5 days ago', phq9: 18, gad7: 15, doctorId: 1 },
+    { id: 3, name: 'Sameer Khan', lastCheckin: '1 day ago', phq9: 7, gad7: 5, doctorId: 2 },
+    { id: 4, name: 'Chen Wei', lastCheckin: '1 week ago', phq9: 22, gad7: 18, doctorId: 3 },
+    { id: 5, name: 'Fatima Al-Sayed', lastCheckin: '3 days ago', phq9: 10, gad7: 11, doctorId: 2 },
+];
+
+
 export const weeklyMoodData = [
   { day: 'Mon', mood: 2 },
   { day: 'Tue', mood: 3 },
