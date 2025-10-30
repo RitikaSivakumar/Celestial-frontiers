@@ -34,13 +34,15 @@ export default function StudentDashboard() {
                             </div>
                         </div>
                     </Link>
-                    <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50">
-                        <Book className="w-6 h-6 text-primary"/>
-                        <div>
-                            <h3 className="font-semibold">Guided Journaling</h3>
-                            <p className="text-sm text-muted-foreground">Reflect on your day.</p>
-                        </div>
-                    </div>
+                    <Link href="/diary" passHref>
+                      <div className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 cursor-pointer">
+                          <Book className="w-6 h-6 text-primary"/>
+                          <div>
+                              <h3 className="font-semibold">Guided Journaling</h3>
+                              <p className="text-sm text-muted-foreground">Reflect on your day.</p>
+                          </div>
+                      </div>
+                    </Link>
                     <SoothingSongs />
                 </CardContent>
             </Card>
