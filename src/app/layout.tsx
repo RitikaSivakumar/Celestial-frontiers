@@ -15,13 +15,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const showSidebar = isClient && localStorage.getItem('user_session');
+    // This check runs only on the client, after hydration.
+    if (localStorage.getItem('user_session')) {
+      setShowSidebar(true);
+    }
+  }, [pathname]); // Re-check when the user navigates
 
   return (
     <html lang="en" suppressHydrationWarning>
