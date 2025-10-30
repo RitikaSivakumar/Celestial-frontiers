@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, TriangleAlert } from 'lucide-react';
 import AddSessionModal from './AddSessionModal';
 
 type PatientListProps = {
@@ -68,10 +68,16 @@ export default function PatientList({ doctorId }: PatientListProps) {
                             {patients.map(patient => {
                                 const phq9Severity = getScoreSeverity(patient.phq9, 'phq9');
                                 const gad7Severity = getScoreSeverity(patient.gad7, 'gad7');
+                                const isHighRisk = phq9Severity.label === 'Severe' || gad7Severity.label === 'Severe';
 
                                 return (
-                                    <TableRow key={patient.id} className="cursor-pointer hover:bg-muted/50">
-                                        <TableCell className="font-medium">{patient.name}</TableCell>
+                                    <TableRow key={patient.id} className={cn("cursor-pointer hover:bg-muted/50", isHighRisk && "bg-destructive/10 hover:bg-destructive/20")}>
+                                        <TableCell className="font-medium">
+                                            <div className="flex items-center gap-2">
+                                                {isHighRisk && <TriangleAlert className="w-4 h-4 text-destructive" />}
+                                                {patient.name}
+                                            </div>
+                                        </TableCell>
                                         <TableCell>{patient.lastCheckin}</TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className="flex items-center gap-2">
