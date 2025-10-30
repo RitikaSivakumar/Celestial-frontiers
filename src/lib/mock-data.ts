@@ -1,3 +1,4 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export type Patient = {
@@ -30,6 +31,7 @@ export const doctors = [
     id: 1,
     name: 'Dr. Emily Carter',
     specialty: 'Clinical Psychologist',
+    description: 'Dr. Carter specializes in cognitive-behavioral therapy and has over 10 years of experience helping patients with anxiety and depression.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageHint || '',
   },
@@ -37,6 +39,7 @@ export const doctors = [
     id: 2,
     name: 'Dr. Ben Adams',
     specialty: 'Psychiatrist',
+    description: 'Dr. Adams focuses on holistic mental health, combining medication management with mindfulness practices for comprehensive care.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageHint || '',
   },
@@ -44,6 +47,7 @@ export const doctors = [
     id: 3,
     name: 'Dr. Chloe Davis',
     specialty: 'Licensed Counselor',
+    description: 'Chloe Davis is a compassionate counselor who provides a safe space for individuals to explore their feelings and develop coping strategies.',
     avatar: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageUrl || '',
     avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageHint || '',
   },

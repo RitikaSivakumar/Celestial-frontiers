@@ -1,3 +1,4 @@
+
 import { doctors } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -17,8 +18,8 @@ export default function DoctorSelectionPage() {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
                 {doctors.map((doctor) => (
-                    <Card key={doctor.id} className="flex flex-col text-center items-center">
-                        <CardHeader>
+                    <Card key={doctor.id} className="flex flex-col">
+                        <CardHeader className="text-center items-center">
                             <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary/20">
                                 <AvatarImage src={doctor.avatar} alt={doctor.name} />
                                 <AvatarFallback>
@@ -28,8 +29,9 @@ export default function DoctorSelectionPage() {
                             <CardTitle className="font-headline">{doctor.name}</CardTitle>
                             <CardDescription>{doctor.specialty}</CardDescription>
                         </CardHeader>
-                        <CardContent className="flex-grow flex items-end">
-                            <Button asChild className="w-full">
+                        <CardContent className="flex-grow flex flex-col">
+                           <p className="text-sm text-muted-foreground text-center flex-grow mb-4">{doctor.description}</p>
+                            <Button asChild className="w-full mt-auto">
                                 <Link href={`/doctors/${doctor.id}/connect`}>Select & Continue</Link>
                             </Button>
                         </CardContent>
