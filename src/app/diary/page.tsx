@@ -19,7 +19,6 @@ export default function DiaryPage() {
   const [entry, setEntry] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
-  const [lastBackup, setLastBackup] = useState<Date | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -28,11 +27,6 @@ export default function DiaryPage() {
       setEntries(pastEntries);
     };
     fetchEntries();
-    
-    const backupTimestamp = localStorage.getItem('lastDiaryBackup');
-    if (backupTimestamp) {
-        setLastBackup(new Date(parseInt(backupTimestamp, 10)));
-    }
   }, []);
 
   const handleSave = async () => {
@@ -79,26 +73,10 @@ export default function DiaryPage() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    const now = new Date();
-    localStorage.setItem('lastDiaryBackup', String(now.getTime()));
-    setLastBackup(now);
-
     toast({
         title: 'Backup Successful',
         description: 'Your diary entries have been downloaded.'
     });
-  }
-
-  const canBackup = () => {
-      if (!lastBackup) return true;
-      const thirtyDays = 30 * 24 * 60 * 60 * 1000;
-      return new Date().getTime() - lastBackup.getTime() > thirtyDays;
-  };
-  
-  const nextBackupDate = () => {
-      if (!lastBackup) return null;
-      const nextDate = new Date(lastBackup.getTime() + (30 * 24 * 60 * 60 * 1000));
-      return format(nextDate, 'PPP');
   }
 
   return (
@@ -109,15 +87,10 @@ export default function DiaryPage() {
             <p className="text-muted-foreground mt-2">A private space for your thoughts and reflections.</p>
           </header>
           <div>
-            <Button onClick={handleBackup} disabled={!canBackup()}>
+            <Button onClick={handleBackup}>
                 <Download className="mr-2"/>
                 Backup Entries
             </Button>
-            {!canBackup() && (
-                <p className="text-xs text-muted-foreground mt-2 text-right">
-                    Next backup available on: {nextBackupDate()}
-                </p>
-            )}
           </div>
       </div>
       
