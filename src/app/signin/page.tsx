@@ -67,12 +67,12 @@ export default function SignInPage() {
         const dashboard = getDashboardForAge(age);
         toast({
             title: "Personalizing Your Experience",
-            description: `Based on your age, we've prepared the ${dashboard.name} dashboard for you.`,
+            description: `Based on your age, we suggest the ${dashboard.name} dashboard for you.`,
             duration: 4000,
         });
 
         setTimeout(() => {
-            router.push(dashboard.path);
+            router.push('/roles');
         }, 2000);
     }
 
@@ -92,12 +92,12 @@ export default function SignInPage() {
       const dashboard = getDashboardForAge(age);
       toast({
           title: "Personalizing Your Experience",
-          description: `Based on your age, we've prepared the ${dashboard.name} dashboard for you.`,
+          description: `Based on your age, we suggest the ${dashboard.name} dashboard for you.`,
           duration: 4000,
       });
 
       setTimeout(() => {
-          router.push(dashboard.path);
+          router.push('/roles');
       }, 2000);
   }
 
