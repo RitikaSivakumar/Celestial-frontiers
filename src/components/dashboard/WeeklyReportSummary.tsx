@@ -13,13 +13,11 @@ export default function WeeklyReportSummary() {
       <CardContent className="flex-grow flex flex-col items-center justify-center text-center">
         <BarChart3 className="w-16 h-16 text-primary mb-4" />
         <p className="text-muted-foreground mb-6">Your summary is ready to view.</p>
-        <Link href="/reports" passHref legacyBehavior>
-          <Button asChild>
-            <a>
+        <Button asChild>
+            <Link href="/reports">
               View Progress Chart <ArrowRight className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
-        </Link>
+            </Link>
+        </Button>
       </CardContent>
     </Card>
   );
