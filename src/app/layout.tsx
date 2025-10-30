@@ -13,6 +13,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [showSidebar, setShowSidebar] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const { setOpen: openChatbot } = useChatbot();
 
   useEffect(() => {
     setIsClient(true);
@@ -25,8 +26,6 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       setShowSidebar(isLoggedIn);
     }
   }, [isClient, pathname]);
-  
-   const { setOpen: openChatbot } = useChatbot();
 
   useEffect(() => {
     const role = isClient ? localStorage.getItem('user_role') : null;
@@ -36,27 +35,18 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             setTimeout(() => openChatbot(true), 500);
        }
     }
-  }, [isClient, openChatbot]);
+  }, [isClient, openChatbot, pathname]);
 
-  const mainContent = (
-    <>
-      {showSidebar ? (
-        <SidebarProvider>
-          <Sidebar>
-            <SidebarNav />
-          </Sidebar>
-          <SidebarInset>
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
-      ) : (
-        children
-      )}
-      <Toaster />
-    </>
-  );
+  if (!isClient) {
+    // Render a loading state on the server to avoid hydration mismatches
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <h1 className="text-2xl font-headline">Loading...</h1>
+      </div>
+    );
+  }
 
-  if (isClient && !showSidebar) {
+  if (!showSidebar) {
     return (
       <>
         {children}
@@ -64,26 +54,19 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       </>
     );
   }
-  
-  if (!isClient && !showSidebar) {
-      return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
-            <h1 className="text-2xl font-headline">Loading...</h1>
-        </div>
-      )
-  }
 
   return (
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarNav />
-        </Sidebar>
-        <SidebarInset>
-            <Chatbot>
-             {children}
-            </Chatbot>
-        </SidebarInset>
-      </SidebarProvider>
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarNav />
+      </Sidebar>
+      <SidebarInset>
+        <Chatbot>
+          {children}
+        </Chatbot>
+      </SidebarInset>
+      <Toaster />
+    </SidebarProvider>
   );
 }
 
@@ -104,7 +87,6 @@ export default function RootLayout({
       <body className="font-body antialiased">
          <ChatbotProvider>
             <AppLayout>{children}</AppLayout>
-            <Toaster />
          </ChatbotProvider>
       </body>
     </html>
