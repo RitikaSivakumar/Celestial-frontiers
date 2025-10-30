@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Chatbot } from '@/components/shared/Chatbot';
 
 export const metadata: Metadata = {
-  title: 'Mindful Path',
+  title: 'Medfinity',
   description: 'Your companion for mental wellness.',
 };
 

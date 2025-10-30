@@ -15,8 +15,8 @@ export default function RoleSelectionPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-headline mb-4">Welcome to Mindful Path</h1>
-        <p className="text-2xl text-muted-foreground">Please select who you are to get a personalized experience.</p>
+        <h1 className="text-5xl font-headline mb-4">Welcome to Medfinity</h1>
+        <p className="text-2xl text-muted-foreground">Your companion for mental wellness. Please select a role for a personalized experience.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {roles.map(role => (
