@@ -1,0 +1,51 @@
+import { PlaceHolderImages } from './placeholder-images';
+
+export const sevenDayPlan = [
+  { day: 'Day 1', task: 'Mindful Breathing', completed: true },
+  { day: 'Day 2', task: 'Light Movement', completed: true },
+  { day: 'Day 3', task: 'Connect with Nature', completed: false },
+  { day: 'Day 4', task: 'Practice Gratitude', completed: false },
+  { day: 'Day 5', task: 'Deep Relaxation', completed: false },
+  { day: 'Day 6', task: 'Creative Expression', completed: false },
+  { day: 'Day 7', task: 'Reflect and Plan', completed: false },
+];
+
+export const medications = [
+  { id: 1, name: 'Vitamin D', dosage: '1 tablet', time: '9:00 AM', taken: true },
+  { id: 2, name: 'Lisinopril', dosage: '10mg', time: '9:00 AM', taken: false },
+  { id: 3, name: 'Metformin', dosage: '500mg', time: '8:00 PM', taken: false },
+];
+
+export const doctors = [
+  {
+    id: 1,
+    name: 'Dr. Emily Carter',
+    specialty: 'Clinical Psychologist',
+    avatar: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageUrl || '',
+    avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-1')?.imageHint || '',
+  },
+  {
+    id: 2,
+    name: 'Dr. Ben Adams',
+    specialty: 'Psychiatrist',
+    avatar: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageUrl || '',
+    avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-2')?.imageHint || '',
+  },
+  {
+    id: 3,
+    name: 'Dr. Chloe Davis',
+    specialty: 'Licensed Counselor',
+    avatar: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageUrl || '',
+    avatarHint: PlaceHolderImages.find(img => img.id === 'doctor-3')?.imageHint || '',
+  },
+];
+
+export const weeklyMoodData = [
+  { day: 'Mon', mood: 2 },
+  { day: 'Tue', mood: 3 },
+  { day: 'Wed', mood: 1 },
+  { day: 'Thu', mood: 2 },
+  { day: 'Fri', mood: 3 },
+  { day: 'Sat', mood: 3 },
+  { day: 'Sun', mood: 2 },
+];
