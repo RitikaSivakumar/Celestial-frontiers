@@ -8,11 +8,7 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem('user_session')) {
-      router.replace('/roles');
-    } else {
-      router.replace('/signin');
-    }
+    router.replace('/welcome');
   }, [router]);
 
   return (
