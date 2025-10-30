@@ -1,3 +1,4 @@
+
 import { doctors } from '@/lib/mock-data';
 import PatientList from '@/components/doctor/PatientList';
 import { notFound } from 'next/navigation';
