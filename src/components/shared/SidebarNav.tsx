@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -18,7 +19,7 @@ import {
   Stethoscope,
   Bot,
   Home,
-  Users,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
@@ -30,6 +31,7 @@ const menuItems = [
   { href: '/reports', label: 'Reports', icon: BarChart3 },
   { href: '/medications', label: 'Medications', icon: Pill },
   { href: '/doctors', label: 'Doctors', icon: Stethoscope },
+  { href: '/assessment', label: 'Assessment', icon: FileText },
 ];
 
 export function SidebarNav() {

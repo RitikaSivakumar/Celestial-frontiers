@@ -1,3 +1,4 @@
+
 import { Phone, Heart, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -66,7 +67,9 @@ export default function SeniorDashboard() {
                 </CardHeader>
                 <CardContent>
                     <p className="text-muted-foreground mb-4">Check in on your emotional well-being with a simple questionnaire.</p>
-                    <Button variant="secondary" className="w-full">Start Assessment</Button>
+                    <Link href="/assessment" passHref>
+                      <Button variant="secondary" className="w-full">Start Assessment</Button>
+                    </Link>
                 </CardContent>
             </Card>
             <Card className="hover:shadow-lg transition-shadow">
