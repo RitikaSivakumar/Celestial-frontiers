@@ -1,7 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
@@ -13,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getZodiacSign, getAstrologicalMessage } from '@/lib/astrology';
 import BirthdayCelebration from '@/components/auth/BirthdayCelebration';
 import { LogIn } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -23,6 +25,7 @@ const formSchema = z.object({
   dob: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: 'Please enter a valid date',
   }),
+  language: z.string({required_error: 'Please select a language.'}),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -33,7 +36,7 @@ export default function SignInPage() {
   const [user, setUser] = useState<{ name: string; dob: Date } | null>(null);
   const [showBirthday, setShowBirthday] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
   });
 
@@ -61,6 +64,11 @@ export default function SignInPage() {
       duration: 5000,
     });
     
+    toast({
+      title: 'Language Set',
+      description: `Your preferred language has been set to ${data.language}.`,
+    });
+
     setUser({ name: data.name, dob: dob });
 
     const handleRedirect = () => {
@@ -133,6 +141,27 @@ export default function SignInPage() {
               <Label htmlFor="dob">Date of Birth</Label>
               <Input id="dob" type="date" {...register('dob')} />
               {errors.dob && <p className="text-destructive text-sm">{errors.dob.message}</p>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="language">Preferred Language</Label>
+              <Controller
+                name="language"
+                control={control}
+                render={({ field }) => (
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger id="language">
+                            <SelectValue placeholder="Select a language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="English">English</SelectItem>
+                            <SelectItem value="Hindi">Hindi</SelectItem>
+                            <SelectItem value="Spanish">Spanish</SelectItem>
+                            <SelectItem value="French">French</SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
+              />
+              {errors.language && <p className="text-destructive text-sm">{errors.language.message}</p>}
             </div>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               <LogIn className="mr-2 h-4 w-4" />
