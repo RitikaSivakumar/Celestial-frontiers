@@ -61,8 +61,8 @@ export default function RelaxationGamesPage() {
                     );
                     if (game.href) {
                         return (
-                            <Link href={game.href} key={index} passHref>
-                                <a className="block h-full hover:shadow-lg transition-shadow rounded-lg">{content}</a>
+                            <Link href={game.href} key={index} className="block h-full hover:shadow-lg transition-shadow rounded-lg">
+                                {content}
                             </Link>
                         )
                     }
