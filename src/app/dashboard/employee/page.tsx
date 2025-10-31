@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Wind, Gamepad2, Users, Lock, Unlock } from "lucide-react";
 import Link from "next/link";
 import SoothingSongs from "@/components/dashboard/SoothingSongs";
-import { useChatbot } from '@/components/shared/Chatbot';
+import { useChatbot } from '@/components/shared/chatbot';
 
 type OnboardingStep = 'select_profession' | 'select_privacy' | 'complete';
 

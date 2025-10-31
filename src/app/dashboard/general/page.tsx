@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from '@/components/ui/button';
 import { Users, Lock, Unlock, PersonStanding, Heart } from "lucide-react";
 import Link from "next/link";
-import { useChatbot } from '@/components/shared/Chatbot';
+import { useChatbot } from '@/components/shared/chatbot';
 import { useTranslation } from '@/hooks/use-translation';
 
 type OnboardingStep = 'select_gender' | 'select_marital_status' | 'select_privacy' | 'complete' | 'loading';

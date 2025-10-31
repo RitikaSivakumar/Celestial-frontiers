@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './Icons';
-import { ChatbotTrigger } from './chatbot';
+import { ChatbotTrigger } from '@/components/shared/chatbot';
 
 const menuItems = [
   { href: '/diary', label: 'Diary', icon: BookHeart },

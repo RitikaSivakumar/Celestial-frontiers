@@ -50,13 +50,15 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
+  const content = (
+    <>
+      {children}
+      <Toaster />
+    </>
+  )
+
   if (!showSidebar) {
-    return (
-      <>
-        {children}
-        <Toaster />
-      </>
-    );
+    return content;
   }
 
   return (
