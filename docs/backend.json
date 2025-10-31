@@ -297,6 +297,42 @@
         "locationDetails",
         "activityType"
       ]
+    },
+    "ChatMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatMessage",
+      "type": "object",
+      "description": "Represents a single message in the peer support chat.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the chat message."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The email of the user who sent the message."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the user who sent the message."
+        },
+        "message": {
+          "type": "string",
+          "description": "The content of the chat message."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The server timestamp when the message was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "message",
+        "timestamp"
+      ]
     }
   },
   "auth": {
@@ -447,6 +483,22 @@
             {
               "name": "connectionId",
               "description": "The unique identifier for the community connection event."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/peer_support_chat/{messageId}",
+        "definition": {
+          "entityName": "chatMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ChatMessage"
+          },
+          "description": "Stores messages for the public peer support chat. Accessible by any authenticated user.",
+          "params": [
+            {
+              "name": "messageId",
+              "description": "The unique identifier for the chat message."
             }
           ]
         }

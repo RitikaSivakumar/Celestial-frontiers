@@ -1,57 +1,93 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send } from 'lucide-react';
+import { Send, Lock } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useFirestore, useCollection, useMemoFirebase, addDocumentNonBlocking } from '@/firebase';
+import { collection, query, orderBy, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
 
-const initialMessages = [
-  {
-    name: 'Ritika',
-    message: 'Hey everyone, just wanted to share that I’ve been feeling a bit overwhelmed with work lately. It’s been tough to switch off.',
-    avatar: '/r-avatar.png',
-    fallback: 'R'
-  },
-  {
-    name: 'Prasheetha',
-    message: 'I hear you, Ritika. I’ve been there. Have you tried setting aside a specific time to disconnect? Like no screens after 9 PM?',
-    avatar: '/p-avatar.png',
-    fallback: 'P'
-  },
-  {
-    name: 'Ritika',
-    message: 'That’s a great idea, Prasheetha. I haven’t been disciplined about it, but I’ll give it a try tonight. Thanks for the suggestion!',
-    avatar: '/r-avatar.png',
-    fallback: 'R'
-  },
-   {
-    name: 'Prasheetha',
-    message: 'You’ve got this! One day at a time. We’re all here for you. 💛',
-    avatar: '/p-avatar.png',
-    fallback: 'P'
-  },
-];
+type ChatMessage = {
+  id: string;
+  name: string;
+  message: string;
+  timestamp: Timestamp;
+  userId: string;
+};
 
 export default function PeerSupportPage() {
-  const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState('');
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const firestore = useFirestore();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const name = localStorage.getItem('user_name');
+    const email = localStorage.getItem('user_email');
+    const role = localStorage.getItem('user_role');
+    const privacyKey = role ? `${role}_privacy` : null;
+    const privacy = privacyKey ? localStorage.getItem(privacyKey) : 'private';
+
+    setUserName(name);
+    setUserEmail(email);
+    setIsPublic(privacy === 'public');
+    setIsLoading(false);
+  }, []);
+
+  const messagesQuery = useMemoFirebase(() => {
+    if (!firestore || !isPublic) return null;
+    return query(collection(firestore, 'peer_support_chat'), orderBy('timestamp', 'asc'));
+  }, [firestore, isPublic]);
+
+  const { data: messages, isLoading: messagesLoading } = useCollection<ChatMessage>(messagesQuery);
 
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // In a real app, this would send to a backend.
-      // Here, we just add it to our local state for a mock effect.
-      setMessages([...messages, { 
-          name: 'You', 
-          message: newMessage,
-          avatar: '',
-          fallback: 'Y'
-        }]);
+    if (newMessage.trim() && firestore && userName && userEmail && isPublic) {
+      const chatCollection = collection(firestore, 'peer_support_chat');
+      addDocumentNonBlocking(chatCollection, {
+        name: userName,
+        message: newMessage,
+        timestamp: serverTimestamp(),
+        userId: userEmail,
+      });
       setNewMessage('');
+    } else if (!isPublic) {
+      toast({
+        title: 'Private Profile',
+        description: 'You cannot send messages with a private profile.',
+        variant: 'destructive',
+      });
     }
+  };
+  
+  if (isLoading) {
+      return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>
+  }
+
+  if (!isPublic) {
+    return (
+        <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+             <Card className="w-full max-w-md">
+                <CardHeader>
+                    <CardTitle className="font-headline flex items-center justify-center gap-2"><Lock /> Private Profile</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-muted-foreground">
+                        Peer support is only available for users with a public profile. You can change your privacy settings in your dashboard to participate.
+                    </p>
+                </CardContent>
+            </Card>
+        </div>
+    )
   }
 
   return (
@@ -71,11 +107,11 @@ export default function PeerSupportPage() {
             <CardContent className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full pr-4">
                     <div className="space-y-6">
-                        {messages.map((msg, index) => (
-                            <div key={index} className="flex items-start gap-4">
+                        {messagesLoading && <p>Loading messages...</p>}
+                        {messages && messages.map((msg) => (
+                            <div key={msg.id} className="flex items-start gap-4">
                                 <Avatar>
-                                    <AvatarImage src={msg.avatar} />
-                                    <AvatarFallback>{msg.fallback}</AvatarFallback>
+                                    <AvatarFallback>{msg.name ? msg.name.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
                                     <p className="font-semibold">{msg.name}</p>
@@ -96,8 +132,9 @@ export default function PeerSupportPage() {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                        disabled={!isPublic}
                     />
-                    <Button onClick={handleSendMessage}>
+                    <Button onClick={handleSendMessage} disabled={!isPublic}>
                         <Send className="mr-2 h-4 w-4" /> Send
                     </Button>
                 </div>
