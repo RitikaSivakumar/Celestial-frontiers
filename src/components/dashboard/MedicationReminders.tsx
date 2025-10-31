@@ -1,21 +1,88 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BellRing, Check, Pill } from 'lucide-react';
-import { medications as initialMedications } from '@/lib/mock-data';
+import { BellRing, Check, Pill, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+export type Medication = {
+  id: number;
+  name: string;
+  dosage: string;
+  time: string;
+  taken: boolean;
+};
+
+const formSchema = z.object({
+    name: z.string().min(1, "Medication name is required."),
+    dosage: z.string().min(1, "Dosage is required."),
+    time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Please use HH:MM format."),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+const getMedicationsFromStorage = (): Medication[] => {
+    if (typeof window === 'undefined') return [];
+    const storedMeds = localStorage.getItem('medications');
+    return storedMeds ? JSON.parse(storedMeds) : [];
+};
+
+const saveMedicationsToStorage = (meds: Medication[]) => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('medications', JSON.stringify(meds));
+};
 
 export default function MedicationReminders() {
-  const [medications, setMedications] = useState(initialMedications);
+  const [medications, setMedications] = useState<Medication[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
 
+  useEffect(() => {
+    setMedications(getMedicationsFromStorage());
+  }, []);
+
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const handleAddMedication: SubmitHandler<FormValues> = (data) => {
+    const newMed: Medication = {
+        id: Date.now(),
+        name: data.name,
+        dosage: data.dosage,
+        time: data.time,
+        taken: false,
+    };
+    const updatedMeds = [...medications, newMed];
+    setMedications(updatedMeds);
+    saveMedicationsToStorage(updatedMeds);
+    
+    toast({
+        title: "Medication Added",
+        description: `${data.name} has been added to your reminders.`
+    });
+    
+    reset();
+    setIsDialogOpen(false);
+  };
+
+
   const handleTakeMedication = (id: number) => {
-    setMedications(meds => 
-      meds.map(med => med.id === id ? { ...med, taken: true } : med)
+    const updatedMeds = medications.map(med => 
+      med.id === id ? { ...med, taken: true } : med
     );
+    setMedications(updatedMeds);
+    saveMedicationsToStorage(updatedMeds);
+
     const medName = medications.find(m => m.id === id)?.name;
     toast({
       title: 'Medication Logged',
@@ -25,9 +92,44 @@ export default function MedicationReminders() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="font-headline">Medication Reminders</CardTitle>
-        <CardDescription>Stay on track with your schedule.</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+            <CardTitle className="font-headline">Medication Reminders</CardTitle>
+            <CardDescription>Stay on track with your schedule.</CardDescription>
+        </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+                 <Button variant="outline" size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4"/>
+                    Add New
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Add New Medication</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit(handleAddMedication)} className="space-y-4">
+                    <div>
+                        <Label htmlFor="name">Medication Name</Label>
+                        <Input id="name" {...register('name')}/>
+                        {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
+                    </div>
+                    <div>
+                        <Label htmlFor="dosage">Dosage (e.g., 1 tablet, 10mg)</Label>
+                        <Input id="dosage" {...register('dosage')}/>
+                        {errors.dosage && <p className="text-sm text-destructive mt-1">{errors.dosage.message}</p>}
+                    </div>
+                     <div>
+                        <Label htmlFor="time">Reminder Time (HH:MM)</Label>
+                        <Input id="time" type="time" {...register('time')}/>
+                        {errors.time && <p className="text-sm text-destructive mt-1">{errors.time.message}</p>}
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit">Add Medication</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -56,7 +158,7 @@ export default function MedicationReminders() {
           ) : (
             <div className="text-center text-muted-foreground p-4 border-2 border-dashed rounded-lg">
               <BellRing className="mx-auto h-8 w-8 mb-2" />
-              <p>No medication reminders set up.</p>
+              <p>No medication reminders set up. Click 'Add New' to start.</p>
             </div>
           )}
         </div>
