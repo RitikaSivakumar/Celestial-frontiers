@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow for analyzing an audio recording to determine mood from tone and content.
@@ -10,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
-export const AnalyzeAudioInputSchema = z.object({
+const AnalyzeAudioInputSchema = z.object({
   audioDataUri: z
     .string()
     .describe(
@@ -19,7 +20,7 @@ export const AnalyzeAudioInputSchema = z.object({
 });
 export type AnalyzeAudioInput = z.infer<typeof AnalyzeAudioInputSchema>;
 
-export const AnalyzeAudioOutputSchema = z.object({
+const AnalyzeAudioOutputSchema = z.object({
   transcription: z.string().describe('The transcription of the audio.'),
   mood: z
     .string()

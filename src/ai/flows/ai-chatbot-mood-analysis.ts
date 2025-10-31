@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview AI-powered sentiment analysis and activity suggestion.
@@ -10,12 +11,12 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const AnalyzeSentimentInputSchema = z.object({
+const AnalyzeSentimentInputSchema = z.object({
   userInput: z.string().describe("The user's text input to be analyzed."),
 });
 export type AnalyzeSentimentInput = z.infer<typeof AnalyzeSentimentInputSchema>;
 
-export const AnalyzeSentimentOutputSchema = z.object({
+const AnalyzeSentimentOutputSchema = z.object({
   response: z.string().describe('The AI-generated response and activity suggestion.'),
 });
 export type AnalyzeSentimentOutput = z.infer<typeof AnalyzeSentimentOutputSchema>;

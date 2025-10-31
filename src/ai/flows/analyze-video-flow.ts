@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow for analyzing a video to determine mood from visual and audio cues.
@@ -10,7 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
-export const AnalyzeVideoInputSchema = z.object({
+const AnalyzeVideoInputSchema = z.object({
   videoDataUri: z
     .string()
     .describe(
@@ -19,7 +20,7 @@ export const AnalyzeVideoInputSchema = z.object({
 });
 export type AnalyzeVideoInput = z.infer<typeof AnalyzeVideoInputSchema>;
 
-export const AnalyzeVideoOutputSchema = z.object({
+const AnalyzeVideoOutputSchema = z.object({
   transcription: z.string().describe('The transcription of the audio in the video.'),
   mood: z
     .string()
