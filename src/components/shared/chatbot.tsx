@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect, createContext, useContext } from 'react';
@@ -178,12 +179,22 @@ export function Chatbot({ children }: { children: React.ReactNode }) {
         videoRef.current.hidden = false;
       }
       
-      mediaRecorderRef.current = new MediaRecorder(stream);
+      const options = type === 'video' ? { mimeType: 'video/webm; codecs=vp9' } : { mimeType: 'audio/webm' };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+          toast({
+            title: 'Unsupported media format',
+            description: `Your browser does not support the ${options.mimeType} format.`,
+            variant: 'destructive',
+          });
+          return;
+      }
+
+      mediaRecorderRef.current = new MediaRecorder(stream, options);
       const chunks: Blob[] = [];
 
       mediaRecorderRef.current.ondataavailable = (e) => chunks.push(e.data);
       mediaRecorderRef.current.onstop = () => {
-        const blob = new Blob(chunks, { type: chunks[0].type });
+        const blob = new Blob(chunks, { type: options.mimeType });
         if (type === 'audio') {
           handleAudioSubmit(blob);
         } else {
