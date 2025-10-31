@@ -50,6 +50,9 @@ export function SidebarNav() {
 
   const handleLogout = () => {
     localStorage.removeItem('user_loggedin');
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_name');
+    localStorage.removeItem('user_dob');
     router.push('/signin');
   };
 

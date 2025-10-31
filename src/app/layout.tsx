@@ -60,17 +60,17 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
+    <Chatbot>
       <SidebarProvider>
-        <Chatbot>
-            <Sidebar>
-                <SidebarNav />
-            </Sidebar>
-            <SidebarInset>
-                {children}
-            </SidebarInset>
-        </Chatbot>
+          <Sidebar>
+              <SidebarNav />
+          </Sidebar>
+          <SidebarInset>
+              {children}
+          </SidebarInset>
         <Toaster />
-    </SidebarProvider>
+      </SidebarProvider>
+    </Chatbot>
   );
 }
 
