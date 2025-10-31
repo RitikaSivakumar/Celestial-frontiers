@@ -25,15 +25,23 @@ export default function EmployeeDashboard() {
   const [step, setStep] = useState<OnboardingStep | 'loading'>('loading');
   const [selectedProfession, setSelectedProfession] = useState('');
   const [otherProfession, setOtherProfession] = useState('');
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const onboardingComplete = localStorage.getItem('employee_onboarding_complete');
-    if (onboardingComplete) {
-      setStep('complete');
+    const email = localStorage.getItem('user_email');
+    setUserEmail(email);
+    if (email) {
+      const onboardingComplete = localStorage.getItem(`employee_onboarding_complete_${email}`);
+      if (onboardingComplete) {
+        setStep('complete');
+      } else {
+        setStep('select_profession');
+      }
     } else {
-      setStep('select_profession');
+      // Handle case where user is not logged in
+      router.push('/signin');
     }
-  }, []);
+  }, [router]);
 
   const handleProfessionSelect = (profession: string) => {
     setSelectedProfession(profession);
@@ -54,9 +62,12 @@ export default function EmployeeDashboard() {
   }
 
   const handlePrivacySelect = (isPublic: boolean) => {
-    localStorage.setItem('employee_onboarding_complete', 'true');
-    localStorage.setItem('employee_profession', selectedProfession);
-    localStorage.setItem('employee_privacy', isPublic ? 'public' : 'private');
+    if (!userEmail) return;
+    localStorage.setItem(`employee_onboarding_complete_${userEmail}`, 'true');
+    localStorage.setItem(`employee_profession_${userEmail}`, selectedProfession);
+    localStorage.setItem(`employee_privacy_${userEmail}`, isPublic ? 'public' : 'private');
+    // Also set the generic privacy for the peer support page
+    localStorage.setItem(`user_privacy_${userEmail}`, isPublic ? 'public' : 'private');
     
     if (isPublic) {
       router.push('/peer-support');

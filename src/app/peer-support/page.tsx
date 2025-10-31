@@ -33,13 +33,14 @@ export default function PeerSupportPage() {
   useEffect(() => {
     const name = localStorage.getItem('user_name');
     const email = localStorage.getItem('user_email');
-    const role = localStorage.getItem('user_role');
-    const privacyKey = role ? `${role}_privacy` : null;
-    const privacy = privacyKey ? localStorage.getItem(privacyKey) : 'private';
-
-    setUserName(name);
     setUserEmail(email);
-    setIsPublic(privacy === 'public');
+    setUserName(name);
+
+    if (email) {
+      const privacy = localStorage.getItem(`user_privacy_${email}`);
+      setIsPublic(privacy === 'public');
+    }
+    
     setIsLoading(false);
   }, []);
 

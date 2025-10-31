@@ -18,19 +18,25 @@ export default function SoothingSongs() {
     const [selectedTrack, setSelectedTrack] = useState<Track>(musicTracks[0]);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(50);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement>(null);
     const { toast } = useToast();
 
     useEffect(() => {
-        const storedVolume = localStorage.getItem('music-volume');
-        if (storedVolume) {
-            setVolume(Number(storedVolume));
-        }
-        const storedTrackId = localStorage.getItem('music-track-id');
-        if (storedTrackId) {
-            const track = musicTracks.find(t => t.id === parseInt(storedTrackId));
-            if (track) {
-                setSelectedTrack(track);
+        const email = localStorage.getItem('user_email');
+        setUserEmail(email);
+
+        if (email) {
+            const storedVolume = localStorage.getItem(`music-volume_${email}`);
+            if (storedVolume) {
+                setVolume(Number(storedVolume));
+            }
+            const storedTrackId = localStorage.getItem(`music-track-id_${email}`);
+            if (storedTrackId) {
+                const track = musicTracks.find(t => t.id === parseInt(storedTrackId));
+                if (track) {
+                    setSelectedTrack(track);
+                }
             }
         }
     }, []);
@@ -39,8 +45,10 @@ export default function SoothingSongs() {
         if (audioRef.current) {
             audioRef.current.volume = volume / 100;
         }
-        localStorage.setItem('music-volume', String(volume));
-    }, [volume]);
+        if (userEmail) {
+            localStorage.setItem(`music-volume_${userEmail}`, String(volume));
+        }
+    }, [volume, userEmail]);
     
     useEffect(() => {
         if (audioRef.current) {
@@ -53,8 +61,10 @@ export default function SoothingSongs() {
                 audioRef.current.pause();
             }
         }
-        localStorage.setItem('music-track-id', String(selectedTrack.id));
-    }, [selectedTrack, isPlaying]);
+        if (userEmail) {
+            localStorage.setItem(`music-track-id_${userEmail}`, String(selectedTrack.id));
+        }
+    }, [selectedTrack, isPlaying, userEmail]);
 
     const togglePlay = () => {
         if (audioRef.current) {

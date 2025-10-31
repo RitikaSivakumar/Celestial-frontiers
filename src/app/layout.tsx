@@ -32,8 +32,11 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (isClient) {
+        const email = localStorage.getItem('user_email');
+        if (!email) return;
+
         const role = localStorage.getItem('user_role');
-        const onboardingKey = role ? `${role}_onboarding_complete` : null;
+        const onboardingKey = role ? `${role}_onboarding_complete_${email}` : null;
         if (onboardingKey && localStorage.getItem(onboardingKey)) {
             const pathShouldOpenChatbot = pathname.startsWith('/dashboard/');
             if (pathShouldOpenChatbot) {

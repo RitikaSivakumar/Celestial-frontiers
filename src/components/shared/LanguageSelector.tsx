@@ -19,7 +19,8 @@ export default function LanguageSelector() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const storedLang = localStorage.getItem('user_language');
+    const userEmail = localStorage.getItem('user_email');
+    const storedLang = userEmail ? localStorage.getItem(`user_language_${userEmail}`) : localStorage.getItem('user_language');
     if (storedLang) {
       setSelectedLanguage(storedLang);
     }
@@ -27,7 +28,13 @@ export default function LanguageSelector() {
 
   const handleLanguageChange = (value: string) => {
     setSelectedLanguage(value);
-    localStorage.setItem('user_language', value);
+    const userEmail = localStorage.getItem('user_email');
+    if (userEmail) {
+      localStorage.setItem(`user_language_${userEmail}`, value);
+    } else {
+      localStorage.setItem('user_language', value);
+    }
+
     const languageName = languages.find(lang => lang.code === value)?.name || 'the selected language';
     
     toast({

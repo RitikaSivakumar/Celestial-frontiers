@@ -25,15 +25,22 @@ export default function StudentDashboard() {
   const [step, setStep] = useState<OnboardingStep>('loading');
   const [selectedEducation, setSelectedEducation] = useState('');
   const [otherEducation, setOtherEducation] = useState('');
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const onboardingComplete = localStorage.getItem('student_onboarding_complete');
-    if (onboardingComplete) {
-      setStep('complete');
+    const email = localStorage.getItem('user_email');
+    setUserEmail(email);
+    if (email) {
+        const onboardingComplete = localStorage.getItem(`student_onboarding_complete_${email}`);
+        if (onboardingComplete) {
+            setStep('complete');
+        } else {
+            setStep('select_education');
+        }
     } else {
-      setStep('select_education');
+        router.push('/signin');
     }
-  }, []);
+  }, [router]);
 
   const handleEducationSelect = (level: string) => {
     setSelectedEducation(level);
@@ -54,9 +61,10 @@ export default function StudentDashboard() {
   }
 
   const handlePrivacySelect = (isPublic: boolean) => {
-    localStorage.setItem('student_onboarding_complete', 'true');
-    localStorage.setItem('student_education_level', selectedEducation);
-    localStorage.setItem('student_privacy', isPublic ? 'public' : 'private');
+    if (!userEmail) return;
+    localStorage.setItem(`student_onboarding_complete_${userEmail}`, 'true');
+    localStorage.setItem(`student_education_level_${userEmail}`, selectedEducation);
+    localStorage.setItem(`user_privacy_${userEmail}`, isPublic ? 'public' : 'private');
     
     if (isPublic) {
       router.push('/peer-support');

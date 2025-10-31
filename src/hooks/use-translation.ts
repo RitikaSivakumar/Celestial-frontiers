@@ -15,7 +15,8 @@ export function useTranslation() {
   const [language, setLanguage] = useState('en');
 
   useEffect(() => {
-    const storedLang = localStorage.getItem('user_language');
+    const userEmail = localStorage.getItem('user_email');
+    const storedLang = userEmail ? localStorage.getItem(`user_language_${userEmail}`) : localStorage.getItem('user_language');
     if (storedLang && translations[storedLang]) {
       setLanguage(storedLang);
     }

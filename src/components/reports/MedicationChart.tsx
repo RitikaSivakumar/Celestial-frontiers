@@ -18,9 +18,9 @@ import {
 import { getDaysInMonth, format } from 'date-fns';
 import type { Medication } from "@/components/dashboard/MedicationReminders";
 
-const getMedicationsFromStorage = (): Medication[] => {
-    if (typeof window === 'undefined') return [];
-    const storedMeds = localStorage.getItem('medications');
+const getMedicationsFromStorage = (userEmail: string): Medication[] => {
+    if (typeof window === 'undefined' || !userEmail) return [];
+    const storedMeds = localStorage.getItem(`medications_${userEmail}`);
     return storedMeds ? JSON.parse(storedMeds) : [];
 };
 
@@ -54,9 +54,14 @@ const getChartData = (medications: Medication[]) => {
 
 export function MedicationChart() {
   const [medications, setMedications] = useState<Medication[]>([]);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    setMedications(getMedicationsFromStorage());
+    const email = localStorage.getItem('user_email');
+    setUserEmail(email);
+    if (email) {
+      setMedications(getMedicationsFromStorage(email));
+    }
   }, []);
 
   const { data: chartData, monthName } = useMemo(() => getChartData(medications), [medications]);

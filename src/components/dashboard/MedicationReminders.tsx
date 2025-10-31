@@ -30,24 +30,29 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const getMedicationsFromStorage = (): Medication[] => {
-    if (typeof window === 'undefined') return [];
-    const storedMeds = localStorage.getItem('medications');
+const getMedicationsFromStorage = (userEmail: string): Medication[] => {
+    if (typeof window === 'undefined' || !userEmail) return [];
+    const storedMeds = localStorage.getItem(`medications_${userEmail}`);
     return storedMeds ? JSON.parse(storedMeds) : [];
 };
 
-const saveMedicationsToStorage = (meds: Medication[]) => {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem('medications', JSON.stringify(meds));
+const saveMedicationsToStorage = (meds: Medication[], userEmail: string) => {
+    if (typeof window === 'undefined' || !userEmail) return;
+    localStorage.setItem(`medications_${userEmail}`, JSON.stringify(meds));
 };
 
 export default function MedicationReminders() {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    setMedications(getMedicationsFromStorage());
+    const email = localStorage.getItem('user_email');
+    setUserEmail(email);
+    if (email) {
+      setMedications(getMedicationsFromStorage(email));
+    }
   }, []);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
@@ -55,6 +60,7 @@ export default function MedicationReminders() {
   });
 
   const handleAddMedication: SubmitHandler<FormValues> = (data) => {
+    if (!userEmail) return;
     const newMed: Medication = {
         id: Date.now(),
         name: data.name,
@@ -64,7 +70,7 @@ export default function MedicationReminders() {
     };
     const updatedMeds = [...medications, newMed];
     setMedications(updatedMeds);
-    saveMedicationsToStorage(updatedMeds);
+    saveMedicationsToStorage(updatedMeds, userEmail);
     
     toast({
         title: "Medication Added",
@@ -77,11 +83,12 @@ export default function MedicationReminders() {
 
 
   const handleTakeMedication = (id: number) => {
+    if (!userEmail) return;
     const updatedMeds = medications.map(med => 
       med.id === id ? { ...med, taken: true } : med
     );
     setMedications(updatedMeds);
-    saveMedicationsToStorage(updatedMeds);
+    saveMedicationsToStorage(updatedMeds, userEmail);
 
     const medName = medications.find(m => m.id === id)?.name;
     toast({
@@ -99,7 +106,7 @@ export default function MedicationReminders() {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                 <Button variant="outline" size="sm">
+                 <Button variant="outline" size="sm" disabled={!userEmail}>
                     <PlusCircle className="mr-2 h-4 w-4"/>
                     Add New
                 </Button>
@@ -158,7 +165,7 @@ export default function MedicationReminders() {
           ) : (
             <div className="text-center text-muted-foreground p-4 border-2 border-dashed rounded-lg">
               <BellRing className="mx-auto h-8 w-8 mb-2" />
-              <p>No medication reminders set up. Click 'Add New' to start.</p>
+              <p>{userEmail ? "No medication reminders set up. Click 'Add New' to start." : "Please log in to manage medications."}</p>
             </div>
           )}
         </div>

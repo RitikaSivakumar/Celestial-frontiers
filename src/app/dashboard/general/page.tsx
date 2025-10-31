@@ -26,15 +26,22 @@ export default function GeneralDashboard() {
   const [step, setStep] = useState<OnboardingStep>('loading');
   const [gender, setGender] = useState<Gender | null>(null);
   const [maritalStatus, setMaritalStatus] = useState<MaritalStatus | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const onboardingComplete = localStorage.getItem('general_onboarding_complete');
-    if (onboardingComplete) {
-      setStep('complete');
+    const email = localStorage.getItem('user_email');
+    setUserEmail(email);
+    if (email) {
+      const onboardingComplete = localStorage.getItem(`general_onboarding_complete_${email}`);
+      if (onboardingComplete) {
+        setStep('complete');
+      } else {
+        setStep('select_gender');
+      }
     } else {
-      setStep('select_gender');
+      router.push('/signin');
     }
-  }, []);
+  }, [router]);
 
   const handleGenderSelect = (selectedGender: Gender) => {
     setGender(selectedGender);
@@ -47,10 +54,11 @@ export default function GeneralDashboard() {
   };
 
   const handlePrivacySelect = (isPublic: boolean) => {
-    localStorage.setItem('general_onboarding_complete', 'true');
-    localStorage.setItem('general_gender', gender || '');
-    localStorage.setItem('general_marital_status', maritalStatus || '');
-    localStorage.setItem('general_privacy', isPublic ? 'public' : 'private');
+    if (!userEmail) return;
+    localStorage.setItem(`general_onboarding_complete_${userEmail}`, 'true');
+    localStorage.setItem(`general_gender_${userEmail}`, gender || '');
+    localStorage.setItem(`general_marital_status_${userEmail}`, maritalStatus || '');
+    localStorage.setItem(`user_privacy_${userEmail}`, isPublic ? 'public' : 'private');
     
     if (isPublic) {
       router.push('/peer-support');
