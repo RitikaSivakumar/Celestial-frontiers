@@ -5,7 +5,7 @@ import './globals.css';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import { SidebarNav } from '@/components/shared/SidebarNav';
 import { Toaster } from '@/components/ui/toaster';
-import { Chatbot, ChatbotProvider, useChatbot } from '@/components/shared/Chatbot';
+import { ChatbotProvider, useChatbot, Chatbot } from '@/components/shared/chatbot';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -56,7 +56,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
+      <SidebarProvider>
         <Chatbot>
             <Sidebar>
                 <SidebarNav />
