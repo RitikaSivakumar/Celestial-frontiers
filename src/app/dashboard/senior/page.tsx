@@ -1,11 +1,16 @@
 
+'use client';
+
 import { Phone, Heart, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import SymptomChecker from '@/components/dashboard/SymptomChecker';
+import { useChatbot } from '@/components/shared/chatbot';
 
 export default function SeniorDashboard() {
+  const { setOpen: openChatbot } = useChatbot();
+
   return (
     <div className="flex flex-col min-h-screen p-4 md:p-8 space-y-8">
       <header className="text-center space-y-4">
@@ -38,8 +43,12 @@ export default function SeniorDashboard() {
             <CardContent>
                 <p className="text-muted-foreground mb-4">Connect with family, a caregiver, or a support line.</p>
                 <div className="flex flex-col sm:flex-row gap-2">
-                    <Button variant="outline" className="flex-1">Call Family</Button>
-                    <Button variant="outline" className="flex-1">Message Caregiver</Button>
+                    <Button asChild variant="outline" className="flex-1">
+                      <a href="tel:6282152384">Call Family</a>
+                    </Button>
+                    <Button variant="outline" className="flex-1" onClick={() => openChatbot(true)}>
+                      Message Caregiver
+                    </Button>
                 </div>
             </CardContent>
           </Card>
