@@ -28,14 +28,18 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   }, [isClient, pathname]);
 
   useEffect(() => {
-    const role = isClient ? localStorage.getItem('user_role') : null;
-    if (role === 'student' || role === 'employee' || role === 'general') {
-       const onboardingComplete = localStorage.getItem(`${role}_onboarding_complete`);
-       if(onboardingComplete){
-            setTimeout(() => openChatbot(true), 500);
-       }
+    if (isClient) {
+        const role = localStorage.getItem('user_role');
+        const onboardingKey = role ? `${role}_onboarding_complete` : null;
+        if (onboardingKey && localStorage.getItem(onboardingKey)) {
+            const pathShouldOpenChatbot = pathname.startsWith('/dashboard/');
+            if (pathShouldOpenChatbot) {
+                 setTimeout(() => openChatbot(true), 500);
+            }
+        }
     }
   }, [isClient, openChatbot, pathname]);
+
 
   if (!isClient) {
     // Render a loading state on the server to avoid hydration mismatches
