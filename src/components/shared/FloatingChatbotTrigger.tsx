@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -25,11 +26,8 @@ export default function FloatingChatbotTrigger() {
       }
     };
 
-    fetchJoke(); // Initial joke
-    const interval = setInterval(fetchJoke, 10000); // Fetch a new joke every 10 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+    fetchJoke(); // Fetch a single joke when the component mounts
+  }, []); // Empty dependency array ensures this runs only once
 
   return (
     <div
