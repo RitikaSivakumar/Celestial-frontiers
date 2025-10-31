@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "UserProfile": {
@@ -333,6 +334,37 @@
         "message",
         "timestamp"
       ]
+    },
+    "EmergencyAlert": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "EmergencyAlert",
+      "type": "object",
+      "description": "Represents an emergency alert sent by a user to doctors.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the emergency alert."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who triggered the alert."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The server timestamp when the alert was created.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the alert (e.g., 'new', 'acknowledged', 'resolved')."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "timestamp",
+        "status"
+      ]
     }
   },
   "auth": {
@@ -502,8 +534,26 @@
             }
           ]
         }
+      },
+      {
+        "path": "/emergencyAlerts/{alertId}",
+        "definition": {
+          "entityName": "emergencyAlert",
+          "schema": {
+            "$ref": "#/backend/entities/EmergencyAlert"
+          },
+          "description": "Stores emergency alerts triggered by users. Any authenticated user can create an alert. Reading alerts should be restricted to doctors/admins.",
+          "params": [
+            {
+              "name": "alertId",
+              "description": "The unique identifier for the emergency alert."
+            }
+          ]
+        }
       }
     ],
     "reasoning": "This Firestore structure prioritizes authorization independence and simplifies security rules. It utilizes path-based ownership for user-specific data and membership maps for collaborative data, denormalizing data to avoid complex `get()` calls in security rules. This approach makes security rules more robust and easier to debug. Segregation ensures each collection has a clear security posture. The `CommunityConnection` leverages denormalization to maintain authorization independence, ensuring users can only access connection data where they are either the initiator or the participant. This design supports QAPs by clearly defining data ownership and access rights, avoiding filtering in rules. The structure promotes clarity, predictability, and consistency, making it easy to understand and maintain the application's data model and security policies."
   }
 }
+
+    

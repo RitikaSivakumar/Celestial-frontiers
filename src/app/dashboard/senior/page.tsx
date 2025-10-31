@@ -7,9 +7,39 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import SymptomChecker from '@/components/dashboard/SymptomChecker';
 import { useChatbot } from '@/components/shared/chatbot';
+import { useFirestore, useUser, addDocumentNonBlocking } from '@/firebase';
+import { collection, serverTimestamp } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+
 
 export default function SeniorDashboard() {
   const { setOpen: openChatbot } = useChatbot();
+  const firestore = useFirestore();
+  const { user } = useUser();
+  const { toast } = useToast();
+
+  const handleEmergencyCall = () => {
+    if (!firestore || !user) {
+      toast({
+        title: 'Error',
+        description: 'You must be logged in to send an alert.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const alertsCollection = collection(firestore, 'emergencyAlerts');
+    addDocumentNonBlocking(alertsCollection, {
+      userId: user.uid,
+      timestamp: serverTimestamp(),
+      status: 'new',
+    });
+
+    toast({
+      title: 'Emergency Alert Sent',
+      description: 'All doctors have been notified of your request.',
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen p-4 md:p-8 space-y-8">
@@ -75,7 +105,7 @@ export default function SeniorDashboard() {
                 <CardContent>
                     <p className="text-muted-foreground mb-4">Quick access to help when you need it most.</p>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <Button variant="destructive" className="flex-1">Call Doctor</Button>
+                      <Button variant="destructive" className="flex-1" onClick={handleEmergencyCall}>Call Doctor</Button>
                       <Button variant="destructive" className="flex-1">Helpline</Button>
                     </div>
                 </CardContent>
@@ -85,3 +115,5 @@ export default function SeniorDashboard() {
     </div>
   );
 }
+
+    
