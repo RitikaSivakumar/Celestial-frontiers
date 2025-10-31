@@ -1,176 +1,198 @@
 /**
- * @file Firestore Security Rules
- * @description This ruleset enforces a strict user-ownership model for personal data and restricts write access to multilingual content to authorized users.
+ * @fileoverview Firestore Security Rules for the Mindful Path application.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for personal data while allowing controlled access to shared community connection data. User data is isolated under their respective userProfile document.
  *
  * Data Structure:
- * - User profiles and associated data (mood logs, assessment results, medication reminders, routines) are nested under /users/{userId}.
- * - Doctor and Caregiver information resides in top-level collections (/doctors/{doctorId} and /caregivers/{caregiverId}) and is generally accessible.
- * - Multilingual content is stored in a top-level collection (/multilingual_content/{contentId}) with public read access and restricted write access.
+ * - /userProfiles/{userId}: User profile information, owned by the user.
+ * - /userProfiles/{userId}/mentalHealthAssessments/{assessmentId}: Mental health assessments, owned by the user.
+ * - /userProfiles/{userId}/medicationReminders/{reminderId}: Medication reminders, owned by the user.
+ * - /userProfiles/{userId}/moodLogs/{moodLogId}: Mood logs, owned by the user.
+ * - /doctors/{doctorId}: Doctor profiles (details not specified, assuming public read, admin write).
+ * - /userDoctorConnections/{connectionId}: Connections between users and doctors.
+ * - /userProfiles/{userId}/emergencyContactDetails/{contactId}: Emergency contact details, owned by the user.
+ * - /communityConnections/{connectionId}: Connections between users in public spaces; accessible only to the initiator or participant.
  *
  * Key Security Decisions:
- * - Users can only access their own profile data and associated subcollections.
- * - Listing of user documents is disallowed for privacy.
- * - Doctor and Caregiver information is publicly readable.
- * - Write access to multilingual content is restricted (TODO: Implement admin role).
+ * - Users can only access their own profile data and associated subcollections (assessments, reminders, mood logs, emergency contacts).
+ * - Doctor profiles are publicly readable.
+ * - Community connections are only accessible to the two connected users.
+ * - No user listing is allowed (explicitly denied).
  *
  * Denormalization for Authorization:
- * - User-specific documents in subcollections (mood_logs, assessment_results, medication_reminders, routines) implicitly inherit ownership from their parent /users/{userId} document.  The 'userId' field within these documents is validated to match the path for added security.
- *
- * Structural Segregation:
- * - User-specific data is stored under the /users/{userId} path to enforce privacy and ownership.
- * - Publicly readable data (doctors, caregivers, multilingual content) is stored in top-level collections.
+ * - Community Connections: The `CommunityConnection` document stores both `initiatorUserId` and `participantUserId` directly in the document. This avoids needing to query related user profiles to determine access rights.
  */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Checks if the request is made by a signed-in user.
-     * @path N/A (Helper Function)
-     * @allow N/A (Helper Function)
-     * @deny N/A (Helper Function)
-     * @principle Requires a verified user identity for all operations.
+     * @description Controls access to user profile documents.
+     * @path /userProfiles/{userProfileId}
+     * @allow (create) User 'test_user' can create their profile if request.auth.uid == userProfileId.
+     * @allow (get, update, delete) User 'test_user' can get, update, and delete their own profile.
+     * @deny  User 'other_user' cannot get, update, or delete user 'test_user's profile.
+     * @principle Enforces document ownership for user profiles.
      */
-    function isSignedIn() {
-      return request.auth != null;
+    match /userProfiles/{userProfileId} {
+      function isOwner(userProfileId) {
+        return request.auth != null && request.auth.uid == userProfileId;
+      }
+
+      function isExistingOwner(userProfileId) {
+        return isOwner(userProfileId) && resource != null;
+      }
+
+      allow get: if isOwner(userProfileId);
+      allow list: if false;
+      allow create: if request.auth.uid == userProfileId;
+      allow update: if isExistingOwner(userProfileId);
+      allow delete: if isExistingOwner(userProfileId);
     }
 
     /**
-     * @description Checks if the requested user ID matches the authenticated user's ID.
-     * @path N/A (Helper Function)
-     * @allow N/A (Helper Function)
-     * @deny N/A (Helper Function)
-     * @principle Enforces document ownership.
+     * @description Controls access to mental health assessment documents within a user's profile.
+     * @path /userProfiles/{userProfileId}/mentalHealthAssessments/{assessmentId}
+     * @allow (create) User 'test_user' can create an assessment in their profile.
+     * @allow (get, update, delete) User 'test_user' can get, update, and delete their own assessments.
+     * @deny  User 'other_user' cannot get, update, or delete user 'test_user's assessments.
+     * @principle Enforces document ownership for mental health assessments.
      */
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+    match /userProfiles/{userProfileId}/mentalHealthAssessments/{assessmentId} {
+      function isOwner(userProfileId) {
+        return request.auth != null && request.auth.uid == userProfileId;
+      }
+
+      function isExistingOwner(userProfileId) {
+        return isOwner(userProfileId) && resource != null;
+      }
+
+      allow get: if isOwner(userProfileId);
+      allow list: if false;
+      allow create: if isOwner(userProfileId);
+      allow update: if isExistingOwner(userProfileId);
+      allow delete: if isExistingOwner(userProfileId);
     }
 
     /**
-     * @description Checks if the authenticated user is the owner of an existing document.
-     * @path N/A (Helper Function)
-     * @allow N/A (Helper Function)
-     * @deny N/A (Helper Function)
-     * @principle Combines ownership and existence checks for state-changing operations.
+     * @description Controls access to medication reminder documents within a user's profile.
+     * @path /userProfiles/{userProfileId}/medicationReminders/{reminderId}
+     * @allow (create) User 'test_user' can create a reminder in their profile.
+     * @allow (get, update, delete) User 'test_user' can get, update, and delete their own reminders.
+     * @deny  User 'other_user' cannot get, update, or delete user 'test_user's reminders.
+     * @principle Enforces document ownership for medication reminders.
      */
-    function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
+    match /userProfiles/{userProfileId}/medicationReminders/{reminderId} {
+      function isOwner(userProfileId) {
+        return request.auth != null && request.auth.uid == userProfileId;
+      }
+
+      function isExistingOwner(userProfileId) {
+        return isOwner(userProfileId) && resource != null;
+      }
+
+      allow get: if isOwner(userProfileId);
+      allow list: if false;
+      allow create: if isOwner(userProfileId);
+      allow update: if isExistingOwner(userProfileId);
+      allow delete: if isExistingOwner(userProfileId);
     }
 
     /**
-     * @description Enforces ownership of user profiles.  Allows read/write access only to the profile owner.
-     * @path /users/{userId}
-     * @allow (create) User 'user_abc' can create their own profile at /users/user_abc if authenticated as 'user_abc'.
-     * @deny (create) User 'user_xyz' cannot create a profile at /users/user_abc.
-     * @principle Enforces document ownership for all operations.
+     * @description Controls access to mood log documents within a user's profile.
+     * @path /userProfiles/{userProfileId}/moodLogs/{moodLogId}
+     * @allow (create) User 'test_user' can create a mood log in their profile.
+     * @allow (get, update, delete) User 'test_user' can get, update, and delete their own mood logs.
+     * @deny  User 'other_user' cannot get, update, or delete user 'test_user's mood logs.
+     * @principle Enforces document ownership for mood logs.
      */
-    match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; // Disallowing listing for privacy.
+    match /userProfiles/{userProfileId}/moodLogs/{moodLogId} {
+      function isOwner(userProfileId) {
+        return request.auth != null && request.auth.uid == userProfileId;
+      }
 
-      allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id; //Enforce immutability of userId
-      allow delete: if isExistingOwner(userId);
+      function isExistingOwner(userProfileId) {
+        return isOwner(userProfileId) && resource != null;
+      }
+
+      allow get: if isOwner(userProfileId);
+      allow list: if false;
+      allow create: if isOwner(userProfileId);
+      allow update: if isExistingOwner(userProfileId);
+      allow delete: if isExistingOwner(userProfileId);
     }
 
     /**
-     * @description Enforces ownership of mood logs. Allows read/write access only to the user's own mood logs.
-     * @path /users/{userId}/mood_logs/{moodLogId}
-     * @allow (create) User 'user_abc' can create a mood log under /users/user_abc/mood_logs/mood_log_1.
-     * @deny (update) User 'user_xyz' cannot update a mood log under /users/user_abc/mood_logs/mood_log_1.
-     * @principle Enforces document ownership for all operations.
-     */
-    match /users/{userId}/mood_logs/{moodLogId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId; // Enforce immutability of userId
-      allow delete: if isExistingOwner(userId);
-    }
-
-    /**
-     * @description Enforces ownership of assessment results. Allows read/write access only to the user's own assessment results.
-     * @path /users/{userId}/assessment_results/{assessmentResultId}
-     * @allow (create) User 'user_abc' can create an assessment result under /users/user_abc/assessment_results/assessment_1.
-     * @deny (update) User 'user_xyz' cannot update an assessment result under /users/user_abc/assessment_results/assessment_1.
-     * @principle Enforces document ownership for all operations.
-     */
-    match /users/{userId}/assessment_results/{assessmentResultId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId; // Enforce immutability of userId
-      allow delete: if isExistingOwner(userId);
-    }
-
-    /**
-     * @description Enforces ownership of medication reminders. Allows read/write access only to the user's own medication reminders.
-     * @path /users/{userId}/medication_reminders/{medicationReminderId}
-     * @allow (create) User 'user_abc' can create a medication reminder under /users/user_abc/medication_reminders/reminder_1.
-     * @deny (update) User 'user_xyz' cannot update a medication reminder under /users/user_abc/medication_reminders/reminder_1.
-     * @principle Enforces document ownership for all operations.
-     */
-    match /users/{userId}/medication_reminders/{medicationReminderId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId; // Enforce immutability of userId
-      allow delete: if isExistingOwner(userId);
-    }
-
-    /**
-     * @description Enforces ownership of routines. Allows read/write access only to the user's own routines.
-     * @path /users/{userId}/routines/{routineId}
-     * @allow (create) User 'user_abc' can create a routine under /users/user_abc/routines/routine_1.
-     * @deny (update) User 'user_xyz' cannot update a routine under /users/user_abc/routines/routine_1.
-     * @principle Enforces document ownership for all operations.
-     */
-    match /users/{userId}/routines/{routineId} {
-      allow get: if isOwner(userId);
-      allow list: if isOwner(userId);
-
-      allow create: if isOwner(userId) && request.resource.data.userId == userId;
-      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId; // Enforce immutability of userId
-      allow delete: if isExistingOwner(userId);
-    }
-
-    /**
-     * @description Allows read access to doctor information for all users. Write access is denied.
+     * @description Controls access to doctor profile documents.  Assumes public read access.  Write access should be restricted to admin roles.
      * @path /doctors/{doctorId}
-     * @allow (get) Any user can retrieve doctor information.
-     * @deny (create) No user can create doctor profiles.
-     * @principle Allows public read access while restricting write access.
+     * @allow (get, list) Anyone can read doctor profiles.
+     * @deny (create, update, delete) Only admins can create, update, or delete doctor profiles.
+     * @principle Allows public read access to doctor profiles.
      */
     match /doctors/{doctorId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
-    }
-
-    /**
-     * @description Allows read access to caregiver information for all users. Write access is denied.
-     * @path /caregivers/{caregiverId}
-     * @allow (get) Any user can retrieve caregiver information.
-     * @deny (create) No user can create caregiver profiles.
-     * @principle Allows public read access while restricting write access.
-     */
-    match /caregivers/{caregiverId} {
-      allow get, list: if true;
-      allow create, update, delete: if false;
-    }
-
-    /**
-     * @description Allows read access to multilingual content for all users. Write access should be restricted to admins only.
-     * @path /multilingual_content/{contentId}
-     * @allow (get) Any user can retrieve multilingual content.
-     * @deny (create) No user can create multilingual content (TODO: Implement admin role).
-     * @principle Allows public read access while restricting write access to admins.
-     */
-    match /multilingual_content/{contentId} {
-      allow get, list: if true;
       allow create, update, delete: if false; // TODO: Add admin role check
+    }
+
+    /**
+     * @description Controls access to user-doctor connection documents.
+     * @path /userDoctorConnections/{connectionId}
+     * @allow (create) A user can create a connection.
+     * @allow (get, update, delete) Only the involved user can get, update, or delete the connection.
+     * @deny  A user cannot access connections involving other users.
+     */
+    match /userDoctorConnections/{connectionId} {
+      function isConnectedUser() {
+          return request.auth.uid == resource.data.userId && request.auth.uid == resource.data.doctorId;
+      }
+
+      allow get, update, delete: if isConnectedUser();
+      allow create: if request.auth.uid != null;
+      allow list: if false;
+    }
+
+    /**
+     * @description Controls access to emergency contact details within a user's profile.
+     * @path /userProfiles/{userProfileId}/emergencyContactDetails/{contactId}
+     * @allow (create) User 'test_user' can create emergency contact details in their profile.
+     * @allow (get, update, delete) User 'test_user' can get, update, and delete their own emergency contact details.
+     * @deny  User 'other_user' cannot get, update, or delete user 'test_user's emergency contact details.
+     * @principle Enforces document ownership for emergency contact details.
+     */
+    match /userProfiles/{userProfileId}/emergencyContactDetails/{contactId} {
+      function isOwner(userProfileId) {
+        return request.auth != null && request.auth.uid == userProfileId;
+      }
+
+      function isExistingOwner(userProfileId) {
+        return isOwner(userProfileId) && resource != null;
+      }
+
+      allow get: if isOwner(userProfileId);
+      allow list: if false;
+      allow create: if isOwner(userProfileId);
+      allow update: if isExistingOwner(userProfileId);
+      allow delete: if isExistingOwner(userProfileId);
+    }
+
+    /**
+     * @description Controls access to community connection documents.  Only the initiator or participant can access the connection data.
+     * @path /communityConnections/{connectionId}
+     * @allow (get, list) User 'test_user' can read a community connection if they are the initiator or the participant.
+     * @deny  User 'other_user' cannot read a community connection they are not involved in.
+     * @principle Enforces that only connected users can access the connection details.
+     */
+    match /communityConnections/{connectionId} {
+      function isParticipant() {
+        return request.auth != null && (request.auth.uid == resource.data.initiatorUserId || request.auth.uid == resource.data.participantUserId);
+      }
+
+      allow get: if isParticipant();
+      allow list: if false;
+      allow create: if request.auth.uid != null;
+      allow update: if isParticipant();
+      allow delete: if isParticipant();
     }
   }
 }
