@@ -37,6 +37,7 @@ export default function LoginPage() {
     // In a real app, you'd call Firebase/backend here
     if (data.email === "user@example.com" && data.password === "password") {
       localStorage.setItem('user_loggedin', 'true');
+      localStorage.setItem('user_email', data.email); // Store email
       toast({
         title: 'Login Successful',
         description: 'Welcome back!',

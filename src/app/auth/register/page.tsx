@@ -45,6 +45,7 @@ export default function RegisterPage() {
     localStorage.setItem('user_loggedin', 'true');
     localStorage.setItem('user_name', data.name);
     localStorage.setItem('user_dob', data.dob);
+    localStorage.setItem('user_email', data.email); // Store email
     
     const zodiacSign = getZodiacSign(dob);
     const astrologicalMessage = getAstrologicalMessage(zodiacSign, data.name);
