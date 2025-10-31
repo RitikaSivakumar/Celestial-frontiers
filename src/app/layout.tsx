@@ -9,6 +9,8 @@ import { ChatbotProvider, useChatbot, Chatbot } from '@/components/shared/chatbo
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FirebaseClientProvider } from '@/firebase';
+import FloatingChatbotTrigger from '@/components/shared/FloatingChatbotTrigger';
+
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -55,6 +57,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       {children}
       <Toaster />
+      {showSidebar && <FloatingChatbotTrigger />}
     </>
   )
 
@@ -72,6 +75,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
               {children}
           </SidebarInset>
         <Toaster />
+        <FloatingChatbotTrigger />
       </SidebarProvider>
     </Chatbot>
   );
