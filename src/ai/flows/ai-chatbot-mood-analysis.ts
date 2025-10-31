@@ -10,12 +10,12 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-const AnalyzeSentimentInputSchema = z.object({
-  userInput: z.string().describe('The user\'s text input to be analyzed.'),
+export const AnalyzeSentimentInputSchema = z.object({
+  userInput: z.string().describe("The user's text input to be analyzed."),
 });
 export type AnalyzeSentimentInput = z.infer<typeof AnalyzeSentimentInputSchema>;
 
-const AnalyzeSentimentOutputSchema = z.object({
+export const AnalyzeSentimentOutputSchema = z.object({
   response: z.string().describe('The AI-generated response and activity suggestion.'),
 });
 export type AnalyzeSentimentOutput = z.infer<typeof AnalyzeSentimentOutputSchema>;
